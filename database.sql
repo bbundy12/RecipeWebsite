@@ -7,6 +7,14 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL
 );
 
+-- Ingredients Table (Moved up)
+CREATE TABLE Ingredients (
+    ingredient_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    PRIMARY KEY (ingredient_id),
+    name VARCHAR(50) NOT NULL,
+    category VARCHAR(50)
+);
+
 -- Recipes Table
 CREATE TABLE Recipes (
     recipe_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
@@ -23,12 +31,4 @@ CREATE TABLE Recipe_Ingredients (
     ingredient_id INTEGER REFERENCES Ingredients(ingredient_id),
     quantity DECIMAL NOT NULL,
     unit VARCHAR(20) NOT NULL
-);
-
--- Ingredients Table
-CREATE TABLE Ingredients (
-    ingredient_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
-    PRIMARY KEY (ingredient_id),
-    name VARCHAR(50) NOT NULL,
-    category VARCHAR(50)
 );
