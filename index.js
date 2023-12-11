@@ -287,5 +287,9 @@ app.get('/viewData', async (req, res) => {
 app.get('/accountCreated', (req, res) => {
     res.render('accountCreated');
   });
-  
+
+app.get('/createRecipe', (req, res) => {
+    res.render('createRecipe');
+  });
+
 app.listen(port, () => console.log("Express App has started and server is listening!"));
