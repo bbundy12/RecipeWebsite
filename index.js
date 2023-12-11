@@ -1,3 +1,9 @@
+// Brendan Bundy, Mckenna Alder, Tanner Atkin, Jakob Blosil, Secion 003
+// This application allows users to add recipes to a database once they have created an account.
+// They can edit their account information. They can also edit their recipe information. They can view all
+// of their recipe data. The main functionality of the website is that a shopping list can be generated
+// for the user after they select the recipes they want to generate th list for. 
+
 const express = require("express");
 
 let app = express();
