@@ -4,7 +4,7 @@ let app = express();
 
 let path = require("path");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended: true}));
@@ -13,11 +13,11 @@ app.use(express.static('public'));
 const knex = require("knex")({
     client: "pg",
     connection: {
-        host: process.env.RDS_HOSTNAME,
-        user: process.env.RDS_USERNAME,
-        password: process.env.RDS_PASSWORD,
-        database: process.env.RDS_DB_NAME,
-        port: process.env.RDS_PORT,
+        host: process.env.RDS_HOSTNAME || localhost,
+        user: process.env.RDS_USERNAME || postgres,
+        password: process.env.RDS_PASSWORD || Boustfee12,
+        database: process.env.RDS_DB_NAME || postgres,
+        port: process.env.RDS_PORT || 5433,
         ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
     }
 }); 
@@ -40,15 +40,6 @@ app.get("/", (req, res) => {
     }
 });
 
-app.get("/survey", (req,res) => {
-    try {
-        res.render("survey", {});
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
 app.get("/createUser", (req,res) => {
     try {
         res.render("createUser", {});
@@ -65,12 +56,9 @@ app.post('/login', async (req, res) => {
 
         console.log('Number of results:', users.length);
 
-        if (users.length == 1 && users[0].Username === 'admin@provocity.org') {
+        if (users.length == 1) {
             // If at least one user is found, you can redirect to a different route or render a page
-            res.redirect('/adminLanding');
-        } 
-        else if (users.length === 1) {
-            res.redirect('/userLanding')
+            res.redirect('/userLanding');
         }
         else {
             // If no user is found, you can render the login page with an error message
@@ -145,27 +133,15 @@ app.get('/userLanding', (req, res) => {
     res.render('userLanding');
   });
 
-app.get('/adminLanding', (req, res) => {
-    res.render('adminLanding');
-  });
-
-  app.get('/unauthorized', (req, res) => {
-    res.render('unauthorized');
-  });
-
-  app.get('/login', (req, res) => {
+app.get('/login', (req, res) => {
     res.render('loginUser');
   });
 
-  app.get('/dashboard', (req, res) => {
-    res.render('dashboard');
+app.get('/recipeSubmitted', (req, res) => {
+    res.render('surveySubmitted');
   });
 
-  app.get('/surveySubmitted', (req, res) => {
-    res.render('surveySubmitted');
-  })
-
-  app.post("/storeSurvey", (req, res) => {
+app.post("/storeRecipe", (req, res) => {
     const timestamp = new Date().toLocaleString('en-US', {
       year: 'numeric',
       month: '2-digit',
@@ -305,9 +281,8 @@ app.get('/viewData', async (req, res) => {
     res.render('logoutSuccessful');
   })
 
-  app.get('/accountCreated', (req, res) => {
+app.get('/accountCreated', (req, res) => {
     res.render('accountCreated');
-  })
-  
+  });
   
 app.listen(port, () => console.log("Express App has started and server is listening!"));
