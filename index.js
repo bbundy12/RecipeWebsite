@@ -13,11 +13,11 @@ app.use(express.static('public'));
 const knex = require("knex")({
     client: "pg",
     connection: {
-        host: process.env.RDS_HOSTNAME || localhost,
-        user: process.env.RDS_USERNAME || postgres,
-        password: process.env.RDS_PASSWORD || Boustfee12,
-        database: process.env.RDS_DB_NAME || postgres,
-        port: process.env.RDS_PORT || 5433,
+        host: process.env.RDS_HOSTNAME,
+        user: process.env.RDS_USERNAME,
+        password: process.env.RDS_PASSWORD,
+        database: process.env.RDS_DB_NAME,
+        port: process.env.RDS_PORT,
         ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
     }
 }); 
@@ -52,7 +52,7 @@ app.get("/createUser", (req,res) => {
 app.post('/login', async (req, res) => {
     try {
         // Check if the username and password match a user in the database
-        const users = await knex.select('Username', 'Password').from('users').where('Username', req.body.username).andWhere('Password', req.body.password);
+        const users = await knex.select('username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
 
         console.log('Number of results:', users.length);
 
@@ -75,8 +75,8 @@ app.post("/storeUser", async (req, res) => {
   try {
     // Check if the new username already exists
     const existingUser = await knex("users")
-      .where("Username", req.body.username)
-      .select('Username');
+      .where("username", req.body.username)
+      .select('username');
 
     if (existingUser.length > 0) {
       // If the username already exists, render the createUser page with an error
@@ -84,7 +84,7 @@ app.post("/storeUser", async (req, res) => {
       return; // Add return to stop further execution
     } else {
       // If the username is not taken, insert the new user
-      await knex("users").insert({ Username: req.body.username, Password: req.body.password });
+      await knex("users").insert({ username: req.body.username, password: req.body.password });
       res.redirect("accountCreated");
     }
   } catch (err) {
@@ -92,8 +92,6 @@ app.post("/storeUser", async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 app.get('/editUser', (req, res) => {
     res.render('editUser');
@@ -109,8 +107,8 @@ app.post('/updatePassword', (req, res) => {
 
         // Update the password in the database
         knex('users')
-            .where('Username', Username)
-            .update({ Password: newPassword })
+            .where('username', Username)
+            .update({password: newPassword })
             .then(() => {
                 // Password updated successfully, redirect to a success page
                 res.redirect('/updatedPassword');
