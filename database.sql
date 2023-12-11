@@ -3,7 +3,6 @@ CREATE TABLE Users (
     user_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
     PRIMARY KEY (user_id),
     username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
