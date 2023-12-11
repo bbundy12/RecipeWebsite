@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!-- 
+  Section 003
+  Group 15
+  Brendan Bundy, Jakob Blosil, McKenna Alder, Tanner Atkin
+
+  This page allows the admin to create a new user.
+ -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/forms.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <!-- Redirect if they don't have the propper credentials -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Check if localStorage username is "Admin"
+      const storedUsername = localStorage.getItem('username');
+
+      if (storedUsername !== 'admin@provocity.org' || storedUsername === null) {
+        // Redirect to a different page if the username is not "Admin"
+        window.location.href = '/unauthorized';
+      }
+      else {
+        // Show the content if the user is authorized
+        document.getElementById('body-content').style.display = 'flex';
+      }
+    });
+  </script>
+</head>
+
+
+<body>
+  <div id="body-content">
+    <!-- Start of Form -->
+    <form action="/storeUser" method="post" onsubmit="return validateForm()">
+      <h2>Create Account</h2>
+
+      <% if (typeof error !=='undefined' ) { %>
+        <p id="error-message" style="display: block;">
+          <%= error %>
+        </p>
+        <% } %>
+
+          <!-- Error Message -->
+          <p id="error-message">Passwords Don't Match</p>
+
+          <!-- Create Account Input -->
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password">
+          <label for="confirmPassword">Confirm Password</label>
+          <input id="confirmPassword" name="confirmPassword" type="password">
+
+          <!-- Create Account Submit -->
+          <button type="submit">Create Your Account</button>
+    </form>
+
+    <!-- JavaScript -->
+    <script>
+      function validateForm() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+          // Display error message
+          document.getElementById('error-message').style.display = 'block';
+          return false; // Prevent form submission
+        }
+
+        // Hide error message if passwords match
+        document.getElementById('error-message').style.display = 'none';
+        return true; // Allow form submission
+
+      }
+    </script>
+  </div>
+</body>
+
+</html>
