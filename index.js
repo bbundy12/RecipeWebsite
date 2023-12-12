@@ -239,7 +239,7 @@ app.post('/storeRecipe', async (req, res) => {
       const [recipeId] = await trx('recipes').insert({
         title: recipe_title,
         servings,
-        instructions: recipe_instructions
+        recipe_instructions: recipe_instructions
       }).returning('recipe_id');
 
       // Insert into the ingredients table and recipe_ingredients junction table
