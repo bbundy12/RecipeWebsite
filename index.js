@@ -144,7 +144,7 @@ app.get('/recipeSubmitted', (req, res) => {
   // I think we store userId instead of username to localstorage and pull it in that way
   app.get('/userLanding/:user_id', async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const user_id = req.params.user_id;
         const recipes = await knex('Recipes').where('user_id', userId).select('title');
 
         res.render('selectRecipes', { recipes });
