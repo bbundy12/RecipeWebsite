@@ -1,8 +1,7 @@
 :root {
-  --primary-color: #127475;
-  --secondary-dark: #4c1e4f;
-  --secondary-light: #574d68;
-  --secondary-light-2: #735d78;
+  --primary-color: #d4a0a7;
+  --secondary-dark: #902d41;
+  --secondary-light: #902d41;
   --grey-accent: #c0c5c1;
   --off-white: #fafafa;
 }
@@ -15,7 +14,7 @@ body {
 #body-content {
   margin: 0;
   padding: 0;
-  display: flex;
+  display: none;
 }
 
 h1,
@@ -28,7 +27,8 @@ input,
 select,
 button,
 .radioSelector div,
-table {
+table,
+textarea {
   font-family: "Poppins", sans-serif;
 }
 
