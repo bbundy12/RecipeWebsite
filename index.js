@@ -142,7 +142,7 @@ app.get('/recipeSubmitted', (req, res) => {
   });
 
   // I think we store userId instead of username to localstorage and pull it in that way
-  app.get('/userLanding/:userId', async (req, res) => {
+  app.get('/userLanding/:user_id', async (req, res) => {
     try {
         const userId = req.params.userId;
         const recipes = await knex('Recipes').where('user_id', userId).select('title');
@@ -268,67 +268,6 @@ app.post("/storeRecipe", (req, res) => {
         res.status(500).send("Internal Server Error");
     })
 });
-
-app.get('/viewData', async (req, res) => {
-    try {
-      // Fetch data from mentalhealthstats and socialmedia tables
-      let query = knex
-        .select(
-          'mentalhealthstats.person_id',  
-          'mentalhealthstats.timestamp',
-          'mentalhealthstats.location',
-          'mentalhealthstats.age',
-          'mentalhealthstats.gender',
-          'mentalhealthstats.relationship_status',
-          'mentalhealthstats.occupation_status',
-          'mentalhealthstats.affiliated_with_university',
-          'mentalhealthstats.affiliated_with_school',
-          'mentalhealthstats.affiliated_with_private',
-          'mentalhealthstats.affiliated_with_company',
-          'mentalhealthstats.affiliated_with_government',
-          'mentalhealthstats.social_media_usage',
-          knex.raw('array_agg(socialmedia.social_media_platform) as social_media_platforms_used'),
-          'mentalhealthstats.average_time_on_social_media',
-          'mentalhealthstats.social_media_usage_without_purpose',
-          'mentalhealthstats.social_media_distraction_frequency',
-          'mentalhealthstats.restlessness_due_to_social_media',
-          'mentalhealthstats.general_distractibility_scale',
-          'mentalhealthstats.general_worry_bother_scale',
-          'mentalhealthstats.general_difficulty_concentrating',
-          'mentalhealthstats.comparing_yourself_to_other_successful_people_frequency',
-          'mentalhealthstats.feelings_about_social_media_comparisons',
-          'mentalhealthstats.seek_validation_from_social_media',
-          'mentalhealthstats.general_depression_frequency',
-          'mentalhealthstats.general_daily_activities_interest_fluctuation_scale',
-          'mentalhealthstats.general_sleep_issues_scale',
-        )
-        .from('mentalhealthstats')
-        .leftJoin('socialmedia', 'mentalhealthstats.person_id', '=', 'socialmedia.person_id')
-        .groupBy('mentalhealthstats.person_id')
-        .orderBy('mentalhealthstats.person_id');
-  
-      // Apply location filter if selected in the form
-      const selectedLocation = req.query.location;
-      if (selectedLocation && selectedLocation !== 'all') {
-        query = query.where('mentalhealthstats.location', selectedLocation);
-      }
-  
-      // Apply person_id filter if provided in the form
-      const personIdFilter = req.query.person_id;
-      if (personIdFilter) {
-        query = query.where('mentalhealthstats.person_id', personIdFilter);
-      }
-  
-      // Execute the query
-      const data = await query;
-  
-      // Render the viewData.ejs file with the fetched data
-      res.render('viewData', { data, selectedLocation, personIdFilter });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
 
   app.get('/logout', (req, res) => {
     res.render('logoutSuccessful');
