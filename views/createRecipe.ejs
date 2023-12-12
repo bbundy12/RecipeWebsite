@@ -67,7 +67,7 @@
 
             <!-- Quantity -->
             <p>Quantity</p>
-            <input type="number" name="quantity_0" required>
+            <input type="number" step="any" name="quantity_0" required>
           </div>
         </div>
 
@@ -127,7 +127,7 @@
         </div>
         <div>
           <p>Quantity</p>
-          <input type="number" name="quantity-${uniqueCounter}" required>
+          <input type="number" step="any" name="quantity-${uniqueCounter}" required>
         </div>
         <button type="button" onclick="removeIngredient('ingredient-${uniqueCounter}')">Remove<br>Ingredient</button>
 
