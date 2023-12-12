@@ -64,7 +64,7 @@ app.post('/login', async (req, res) => {
 
         if (users.length == 1) {
             // If at least one user is found, you can redirect to a different route or render a page
-            res.redirect('/userLanding');
+            res.redirect('/userLanding${users[1].username}');
         }
         else {
             // If no user is found, you can render the login page with an error message
@@ -142,10 +142,10 @@ app.get('/recipeSubmitted', (req, res) => {
   });
 
   // I think we store userId instead of username to localstorage and pull it in that way
-  app.get('/userLanding/:user_id', async (req, res) => {
+  app.get('/userLanding/:username', async (req, res) => {
     try {
-        const user_id = req.params.user_id;
-        const recipes = await knex('Recipes').where('user_id', user_id).select('title');
+        const username = req.params.username;
+        const recipes = await knex('Recipes').where('username', username).select('title');
 
         res.render('selectRecipes', { recipes });
     } catch (error) {
