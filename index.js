@@ -145,6 +145,47 @@ app.get('/recipeSubmitted', (req, res) => {
     res.render('surveySubmitted');
   });
 
+  // POST route to aggregate ingredients for selected recipes
+app.post('/aggregate_ingredients', async (req, res) => {
+  try {
+      // Extract selected recipe names from the request
+      const selectedRecipes = req.body.selectedRecipes; // Assuming this is an array of recipe names
+
+      // Query to get ingredients
+      const ingredientsQuery = await knex
+          .select('Recipes.title', 'Ingredients.name', 'Recipe_Ingredients.unit', 'Recipe_Ingredients.quantity')
+          .from('Recipes')
+          .join('Recipe_Ingredients', 'Recipes.recipe_id', 'Recipe_Ingredients.recipe_id')
+          .join('Ingredients', 'Recipe_Ingredients.ingredient_id', 'Ingredients.ingredient_id')
+          .whereIn('Recipes.title', selectedRecipes);
+
+      // Array to hold aggregated ingredients
+      let aggregatedIngredients = [];
+
+      // Iterate through query results and aggregate quantities
+      for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
+          let bFound = false; // Corrected variable name
+          for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
+              if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
+                  aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
+                  bFound = true;
+              }
+          }
+          if (!bFound) {
+              aggregatedIngredients.push([ingredientsQuery[iQuery].name, ingredientsQuery[iQuery].quantity, ingredientsQuery[iQuery].unit]);
+              bFound = true;
+            }
+      }
+
+      // Render the data using a view template
+      res.render('viewData', { aggregatedIngredients }); // Update 'viewData' to your actual view file name
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
 app.post("/storeRecipe", (req, res) => {
     const timestamp = new Date().toLocaleString('en-US', {
       year: 'numeric',
