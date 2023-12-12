@@ -282,7 +282,6 @@ app.post('/storeRecipe', async (req, res) => {
         console.error("Error storing recipe:", error);
         res.status(500).send("Internal Server Error");
     }
-});
       }
     });
 
