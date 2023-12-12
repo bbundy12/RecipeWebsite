@@ -248,8 +248,9 @@ app.post('/storeRecipe', async (req, res) => {
           name: ingredient.name
         }).returning('ingredient_id').then( async (ingredientId) => {
         const ingredientid = ingredientId[0].ingredient_id
+        const recipeid = ingredientId[0].recipe_id
         await trx('recipe_ingredients').insert({
-          recipe_id: recipeId,
+          recipe_id: recipeid,
           ingredient_id: ingredientid,
           quantity: ingredient.quantity,
           unit: ingredient.measurement
