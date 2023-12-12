@@ -12,6 +12,8 @@ let path = require("path");
 
 const port = process.env.PORT;
 
+const puppeteer = require('puppeteer');
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -58,7 +60,7 @@ app.get("/createUser", (req,res) => {
 app.post('/login', async (req, res) => {
     try {
         // Check if the username and password match a user in the database
-        const users = await knex.select('user_id', 'username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
+        const users = await knex.select('username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
 
         console.log('Number of results:', users.length);
 
@@ -173,7 +175,7 @@ app.post('/aggregate_ingredients', async (req, res) => {
 
       // Iterate through query results and aggregate quantities
       for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
-          let bFound = false; // Corrected variable name
+          let bFound = false; 
           for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
               if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
                   aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
@@ -186,13 +188,31 @@ app.post('/aggregate_ingredients', async (req, res) => {
             }
       }
 
-      // Render the data using a view template
-      res.render('viewData', { aggregatedIngredients }); // Update 'viewData' to your actual view file name
+      // Create an HTML template for the PDF
+      let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
+      htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
+      aggregatedIngredients.forEach(ingredient => {
+          htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
+      });
+      htmlContent += `</ul></body></html>`;
+
+      // Launch Puppeteer and create a PDF
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.setContent(htmlContent);
+      const pdf = await page.pdf({ format: 'A4' });
+
+      // Send the PDF as a response
+      res.contentType("application/pdf");
+      res.send(pdf);
+
+      await browser.close();
   } catch (error) {
       console.error('Error fetching data:', error);
       res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 app.post("/storeRecipe", (req, res) => {
