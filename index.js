@@ -237,9 +237,9 @@ app.post('/storeRecipe', async (req, res) => {
     await knex.transaction(async (trx) => {
       // Insert into the recipes table
       const [recipeId] = await trx('recipes').insert({
-        recipe_title,
+        title: recipe_title,
         servings,
-        recipe_instructions
+        instructions: recipe_instructions
       }).returning('recipe_id');
 
       // Insert into the ingredients table and recipe_ingredients junction table
@@ -256,12 +256,14 @@ app.post('/storeRecipe', async (req, res) => {
         });
       }
     });
+
     res.redirect('/recipeSubmitted');
   } catch (error) {
     console.error('Error processing form data:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
   app.get('/logout', (req, res) => {
     res.render('logoutSuccessful');
