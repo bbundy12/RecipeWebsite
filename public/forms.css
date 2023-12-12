@@ -128,7 +128,6 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 0 50px; */
 }
 
 #all-rating-container-1-5 > p {
@@ -195,6 +194,34 @@ textarea:focus {
 .rating-container-1-5 input:checked + label {
   background-color: var(--primary-color);
   color: #ffffff;
+}
+
+.ingredient-title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
+
+.ingredient-title-container div:first-child {
+  flex: 1;
+  margin: 0 20px 0 0;
+}
+
+.ingredient-title-container div input {
+  margin: 0;
+}
+
+.ingredient-title-container button {
+  width: auto;
+  margin: 0 0 0 20px;
+  padding: 4.5px 10px;
+  font-size: 0.7em;
+  text-align: left;
+}
+
+#add-ingredient-button {
+  padding: 4px 0;
+  font-size: 0.8em;
 }
 
 form button {

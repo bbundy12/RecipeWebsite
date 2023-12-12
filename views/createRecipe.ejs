@@ -52,61 +52,111 @@
     <!-- Ingredients -->
     <p>Ingredients</p>
     <div class="question-divider"></div>
-    <div id="ingredient-container"></div>
-    <button type="button" onclick="addIngredient()">Add Ingredient</button>
+    <div id="ingredients-container">
 
+      <!-- Ingredient Item -->
+      <div id="ingredient-0">
+        <div class="ingredient-title-container">
+          <div>
+
+            <!-- Ingredient Name -->
+            <p>Ingredient Name</p>
+            <input type="text" name="ingredient-name-0" required>
+          </div>
+          <div>
+
+            <!-- Quantity -->
+            <p>Quantity</p>
+            <input type="number" name="quantity-0" required>
+          </div>
+        </div>
+
+        <!-- Measurement -->
+        <p>Measurement</p>
+        <div class="radioSelector">
+          <input id="pinch-0" value="pinch" name="measurement-0" type="radio" required />
+          <label for="pinch-0" style="border-radius: 2px 0 0 2px;">pinch</label>
+          <input id="tsp-0" value="tsp" name="measurement-0" type="radio" required />
+          <label for="tsp-0">tsp</label>
+          <input id="tbsp-0" value="tbsp" name="measurement-0" type="radio" required />
+          <label for="tbsp-0">tbsp</label>
+          <input id="cup-0" value="cup" name="measurement-0" type="radio" required />
+          <label for="cup-0">cup</label>
+          <input id="oz-0" value="oz" name="measurement-0" type="radio" required />
+          <label for="oz-0">oz</label>
+          <input id="lb-0" value="lb" name="measurement-0" type="radio" required />
+          <label for="lb-0" style="border-radius: 0 2px 2px 0;">lb</label>
+        </div>
+        <div class="question-divider"></div>
+      </div>
+    </div>
+
+    <!-- Add Ingredient -->
+    <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
 
     <!-- Recipe Instructions -->
     <p>Recipe Instructions</p>
     <textarea id="recipe_instructions" name="recipe_instructions" rows="5" required></textarea>
 
-
-    <!-- Survey Submit -->
-    <button type="submit">Submit Survey</button>
+    <!-- Create Recipe -->
+    <button type="submit">Create Recipe</button>
   </form>
 
   <!-- JS -->
   <script>
 
+    // initialize counter
+    let uniqueCounter = 0;
+
     // dynamically add ingredients
     function addIngredient() {
 
       // define variables
-      const container = document.getElementById('ingredient-container');
+      const container = document.getElementById('ingredients-container');
       const ingredientDiv = document.createElement('div');
 
-      // add html with button
-      ingredientDiv.innerHTML = `
-        <input type="text" name="ingredient[]" placeholder="Ingredient" required>
-        <input type="number" name="quantity[]" placeholder="Quantity" required>
+      uniqueCounter = uniqueCounter + 1;
 
+      // add html with button
+      ingredientDiv.id = `ingredient-${uniqueCounter}`;
+      ingredientDiv.innerHTML = `
+      <div class="ingredient-title-container">
+        <div>
+          <p>Ingredient Name</p>
+          <input type="text" name="ingredient-name-${uniqueCounter}" required>
+        </div>
+        <div>
+          <p>Quantity</p>
+          <input type="number" name="quantity-${uniqueCounter}" required>
+        </div>
+        <button type="button" onclick="removeIngredient('ingredient-${uniqueCounter}')">Remove<br>Ingredient</button>
+
+      </div>
         <p>Measurement</p>
         <div class="radioSelector">
-          <input id="1-serving" value="1" name="measurement[]" type="radio" required />
-          <label for="1-serving" style="border-radius: 2px 0 0 2px;">pinch</label>
-          <input id="2-4-serving" value="2-4" name="measurement[]" type="radio" required />
-          <label for="2-4-serving">tsp</label>
-          <input id="2-4-serving" value="2-4" name="measurement[]" type="radio" required />
-          <label for="2-4-serving">tbsp</label>
-          <input id="4-6-serving" value="4-6" name="measurement[]" type="radio" required />
-          <label for="4-6-serving">cup</label>
-          <input id="6-8-serving" value="6-8" name="measurement[]" type="radio" required />
-          <label for="6-8-serving">oz</label>
-          <input id="10-serving" value="10+" name="measurement[]" type="radio" required />
-          <label for="10-serving" style="border-radius: 0 2px 2px 0;">lb</label>
+          <input id="pinch-${uniqueCounter}" value="pinch" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="pinch-${uniqueCounter}" style="border-radius: 2px 0 0 2px;">pinch</label>
+          <input id="tsp-${uniqueCounter}" value="tsp" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="tsp-${uniqueCounter}">tsp</label>
+          <input id="tbsp-${uniqueCounter}" value="tbsp" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="tbsp-${uniqueCounter}">tbsp</label>
+          <input id="cup-${uniqueCounter}" value="cup" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="cup-${uniqueCounter}">cup</label>
+          <input id="oz-${uniqueCounter}" value="oz" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="oz-${uniqueCounter}">oz</label>
+          <input id="lb-${uniqueCounter}" value="lb" name="measurement-${uniqueCounter}" type="radio" required />
+          <label for="lb-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">lb</label>
         </div>
-
-
-        <button type="button" onclick="removeIngredient(this)">Remove</button>
-        <br>
+        <div class="question-divider"></div>
       `;
       container.appendChild(ingredientDiv);
     }
 
     // remove ingredient
-    function removeIngredient(button) {
-      const container = document.getElementById('ingredientsContainer');
-      container.removeChild(button.parentElement);
+    function removeIngredient(uniqueId) {
+      const container = document.getElementById('ingredients-container');
+      const elementToRemove = document.getElementById(uniqueId);
+      container.removeChild(elementToRemove);
     }
   </script>
 </body>
