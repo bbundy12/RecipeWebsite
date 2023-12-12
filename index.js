@@ -58,7 +58,7 @@ app.get("/createUser", (req,res) => {
 app.post('/login', async (req, res) => {
     try {
         // Check if the username and password match a user in the database
-        const users = await knex.select('username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
+        const users = await knex.select('user_id', 'username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
 
         console.log('Number of results:', users.length);
 
@@ -145,11 +145,24 @@ app.get('/recipeSubmitted', (req, res) => {
     res.render('surveySubmitted');
   });
 
+  // I think we store userId instead of username to localstorage and pull it in that way
+  app.get('/userLanding/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const recipes = await knex('Recipes').where('user_id', userId).select('title');
+
+        res.render('selectRecipes', { recipes });
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
   // POST route to aggregate ingredients for selected recipes
 app.post('/aggregate_ingredients', async (req, res) => {
   try {
       // Extract selected recipe names from the request
-      const selectedRecipes = req.body.selectedRecipes; // Assuming this is an array of recipe names
+      const selectedRecipes = req.body.selectedRecipes;
 
       // Query to get ingredients
       const ingredientsQuery = await knex

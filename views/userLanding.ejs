@@ -39,6 +39,17 @@
       <p>Explore individual survey responses or view the dashboard below.</p>
       <a href="/createRecipe">Create Recipe</a>
     </header>
+    
+    <h1>Select Recipes</h1>
+    <form action="/aggregate_ingredients" method="post">
+        <% recipes.forEach(recipe => { %>
+            <div>
+                <input type="checkbox" name="selectedRecipes[]" id="<%= recipe.title %>" value="<%= recipe.title %>">
+                <label for="<%= recipe.title %>"><%= recipe.title %></label>
+            </div>
+        <% }); %>
+        <button type="submit">Generate Grocery List</button>
+    </form>
 
     <!-- Reload on Resize -->
     <script>
