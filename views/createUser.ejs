@@ -27,7 +27,7 @@
 <body>
   <div id="body-content">
     <!-- Start of Form -->
-    <form action="/storeUser" method="post" onsubmit="return validateForm()">
+    <form id="createUser" action="/storeUser" method="post" onsubmit="return validateForm()">
       <h2>Create Account</h2>
 
       <% if (typeof error !=='undefined' ) { %>
@@ -69,6 +69,12 @@
         return true; // Allow form submission
 
       }
+
+      document.getElementById('createUser').addEventListener('submit', function (event) {
+      const username = document.getElementById('username').value;
+
+      localStorage.setItem('username', username);
+    });
     </script>
   </div>
 </body>
