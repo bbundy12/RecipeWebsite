@@ -222,12 +222,12 @@ app.post('/storeRecipe', async (req, res) => {
 
     // Iterate through form data to collect ingredient information
     Object.keys(req.body).forEach(key => {
-      if (key.startsWith('ingredient-name-')) {
-        const uniqueCounter = key.split('-')[2]; // Extract uniqueCounter from key
+      if (key.startsWith('ingredient_name_')) {
+        const uniqueCounter = key.split('_')[2]; // Extract uniqueCounter from key
         const ingredient = {
-          name: req.body[`ingredient-name-${uniqueCounter}`],
-          quantity: req.body[`quantity-${uniqueCounter}`],
-          measurement: req.body[`measurement-${uniqueCounter}`]
+          name: req.body[`ingredient_name_${uniqueCounter}`],
+          quantity: req.body[`quantity_${uniqueCounter}`],
+          measurement: req.body[`measurement_${uniqueCounter}`]
         };
         ingredients.push(ingredient);
       }
