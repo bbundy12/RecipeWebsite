@@ -27,42 +27,34 @@
   <div id="body-content">
     <!-- Navbar -->
     <nav>
-      <p><small>Signed in as:</small>User</p>
-      <div id="links">
-        <a href="/editUser">Edit Account Info</a>
-        <a href="/logout">Log Out</a>
-      </div>
+      <a href="/editUser">Edit Account Info</a>
+      <a href="/logout">Log Out</a>
     </nav>
 
     <header>
       <h2>Welcome!</h2>
-      <p>Explore individual survey responses or view the dashboard below.</p>
+      <p>View your current recipies below and decide what you want to add to your shopping list.</p>
       <a href="/createRecipe">Create Recipe</a>
     </header>
-    
-    <h1>Select Recipes</h1>
-    <form action="/aggregate_ingredients" method="post">
-        <% recipes.forEach(recipe => { %>
-            <div>
-                <input type="checkbox" name="selectedRecipes[]" id="<%= recipe.title %>" value="<%= recipe.title %>">
-                <label for="<%= recipe.title %>"><%= recipe.title %></label>
-            </div>
-        <% }); %>
-        <button type="submit">Generate Grocery List</button>
-    </form>
 
-    <!-- Reload on Resize -->
-    <script>
-      let prevMatch = window.matchMedia("(max-width: 1080px)").matches;
-      function checkMediaQuery() {
-        const currentMatch = window.matchMedia("(max-width: 1080px)").matches;
-        if (currentMatch !== prevMatch) {
-          location.reload();
-        }
-        prevMatch = currentMatch;
-      }
-      window.addEventListener('resize', checkMediaQuery);
-    </script>
+    <h3>Select Recipes</h3>
+    <form action="/aggregate_ingredients" method="post">
+      <div id="recipe-card-container">
+        <% recipes.forEach(recipe=> { %>
+          <div class="recipe-card">
+            <h4>
+              <%= recipe.title %>
+            </h4>
+            <a href="">View Recipe</a>
+            <div class="token-container">
+              <input id="<%= recipe.title %>" value="<%= recipe.title %>" name="selected-recipes" type="checkbox" />
+              <label for="<%= recipe.title %>" class="token">Add to Shopping List</label>
+            </div>
+          </div>
+          <% }); %>
+      </div>
+      <button type="submit">Generate Grocery List</button>
+    </form>
 
     <!-- Footer -->
     <footer>
