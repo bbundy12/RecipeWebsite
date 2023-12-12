@@ -118,33 +118,33 @@
       uniqueCounter = uniqueCounter + 1;
 
       // add html with button
-      ingredientDiv.id = `ingredient-${uniqueCounter}`;
+      ingredientDiv.id = `ingredient_${uniqueCounter}`;
       ingredientDiv.innerHTML = `
       <div class="ingredient-title-container">
         <div>
           <p>Ingredient Name</p>
-          <input type="text" name="ingredient-name-${uniqueCounter}" required>
+          <input type="text" name="ingredient-name_${uniqueCounter}" required>
         </div>
         <div>
           <p>Quantity</p>
-          <input type="number" name="quantity-${uniqueCounter}" required>
+          <input type="number" name="quantity_${uniqueCounter}" required>
         </div>
-        <button type="button" onclick="removeIngredient('ingredient-${uniqueCounter}')">Remove<br>Ingredient</button>
+        <button type="button" onclick="removeIngredient('ingredient_${uniqueCounter}')">Remove<br>Ingredient</button>
 
       </div>
         <p>Measurement</p>
         <div class="radioSelector">
-          <input id="pinch-${uniqueCounter}" value="pinch" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="pinch-${uniqueCounter}" value="pinch" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="pinch-${uniqueCounter}" style="border-radius: 2px 0 0 2px;">pinch</label>
-          <input id="tsp-${uniqueCounter}" value="tsp" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="tsp-${uniqueCounter}" value="tsp" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="tsp-${uniqueCounter}">tsp</label>
-          <input id="tbsp-${uniqueCounter}" value="tbsp" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="tbsp-${uniqueCounter}" value="tbsp" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="tbsp-${uniqueCounter}">tbsp</label>
-          <input id="cup-${uniqueCounter}" value="cup" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="cup-${uniqueCounter}" value="cup" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="cup-${uniqueCounter}">cup</label>
-          <input id="oz-${uniqueCounter}" value="oz" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="oz-${uniqueCounter}" value="oz" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="oz-${uniqueCounter}">oz</label>
-          <input id="lb-${uniqueCounter}" value="lb" name="measurement-${uniqueCounter}" type="radio" required />
+          <input id="lb-${uniqueCounter}" value="lb" name="measurement_${uniqueCounter}" type="radio" required />
           <label for="lb-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">lb</label>
         </div>
         <div class="question-divider"></div>
