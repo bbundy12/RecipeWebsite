@@ -133,10 +133,6 @@ app.get('/updatedPassword', (req, res) => {
     res.render('updatedPassword');
   });
 
-app.get('/userLanding', (req, res) => {
-    res.render('userLanding');
-  });
-
 app.get('/login', (req, res) => {
     res.render('loginUser');
   });
