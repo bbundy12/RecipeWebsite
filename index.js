@@ -138,7 +138,7 @@ app.get('/login', (req, res) => {
   });
 
 app.get('/recipeSubmitted', (req, res) => {
-    res.render('surveySubmitted');
+    res.render('recipeSubmitted');
   });
 
   // I think we store userId instead of username to localstorage and pull it in that way
@@ -195,78 +195,52 @@ app.post('/aggregate_ingredients', async (req, res) => {
 });
 
 
-app.post("/storeRecipe", (req, res) => {
-    const timestamp = new Date().toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-  
-    console.log(timestamp)
+app.post('/storeRecipe', async (req, res) => {
+  try {
+    const { recipe_title, servings, recipe_instructions } = req.body;
+    const ingredients = [];
 
-    const handleNullOrUndefined = (value) => {
-      return value !== undefined && value !== null ? value : false;
-    };
-  
-    knex("mentalhealthstats").insert({
-        timestamp: timestamp,
-        location: "Provo",
-        age: req.body.age,
-        gender: req.body.gender,
-        relationship_status: req.body.relationship_status,
-        occupation_status: req.body.occupation_status,
-        affiliated_with_university: handleNullOrUndefined(req.body.university_hidden),
-        affiliated_with_school: handleNullOrUndefined(req.body.school_hidden),
-        affiliated_with_private: handleNullOrUndefined(req.body.private_hidden),
-        affiliated_with_company: handleNullOrUndefined(req.body.company_hidden),
-        affiliated_with_government: handleNullOrUndefined(req.body.government_hidden),
-        social_media_usage: req.body.social_media_usage,
-        average_time_on_social_media: req.body.average_social_media_time,
-        social_media_usage_without_purpose: req.body.question_9,
-        social_media_distraction_frequency: req.body.question_10,
-        restlessness_due_to_social_media: req.body.question_11,
-        general_distractibility_scale: req.body.question_12,
-        general_worry_bother_scale: req.body.question_13,
-        general_difficulty_concentrating: req.body.question_14,
-        comparing_yourself_to_other_successful_people_frequency: req.body.question_15,
-        feelings_about_social_media_comparisons: req.body.question_16,
-        seek_validation_from_social_media: req.body.question_17,
-        general_depression_frequency: req.body.question_18,
-        general_daily_activities_interest_fluctuation_scale: req.body.question_19,
-        general_sleep_issues_scale: req.body.question_20
-      })
-      .returning("person_id")
-      .then(async (mentalHealthStatsIds) => {
-        const mentalHealthStatsId = mentalHealthStatsIds[0].person_id;
-        const socialMediaPlatforms = [
-          "Instagram", "Facebook", "Twitter", "Tiktok", "YouTube",
-          "Discord", "Reddit", "Pinterest", "Snapchat"
-        ];
-        for (const platform of socialMediaPlatforms) {
-          if (req.body[`${platform}_hidden`]) {
-            try {
-              await knex("socialmedia").insert({
-                person_id: mentalHealthStatsId,
-                social_media_platform: platform
-              });
-            } catch (error) {
-              console.error(`Error inserting into socialmedia for platform ${platform}:`, error);
-              throw error; // rethrow the error to be caught by the outer catch
-            }
-          }
-        }
-      })
-      .then(() => {
-        res.redirect("/surveySubmitted");
-      })
-      .catch((error) => {
-        console.error("Error in transaction:", error);
-        res.status(500).send("Internal Server Error");
-    })
+    // Iterate through form data to collect ingredient information
+    Object.keys(req.body).forEach(key => {
+      if (key.startsWith('ingredient-name-')) {
+        const uniqueCounter = key.split('-')[2]; // Extract uniqueCounter from key
+        const ingredient = {
+          name: req.body[`ingredient-name-${uniqueCounter}`],
+          quantity: req.body[`quantity-${uniqueCounter}`],
+          measurement: req.body[`measurement-${uniqueCounter}`]
+        };
+        ingredients.push(ingredient);
+      }
+    });
+
+    // Use Knex transactions to ensure atomicity
+    await knex.transaction(async (trx) => {
+      // Insert into the recipes table
+      const [recipeId] = await trx('recipes').insert({
+        recipe_title,
+        servings,
+        recipe_instructions
+      }).returning('recipe_id');
+
+      // Insert into the ingredients table and recipe_ingredients junction table
+      for (const ingredient of ingredients) {
+        const [ingredientId] = await trx('ingredients').insert({
+          name: ingredient.name
+        }).returning('ingredient_id');
+
+        await trx('recipe_ingredients').insert({
+          recipe_id: recipeId,
+          ingredient_id: ingredientId,
+          quantity: ingredient.quantity,
+          unit: ingredient.measurement
+        });
+      }
+    });
+    res.redirect('/recipeSubmitted');
+  } catch (error) {
+    console.error('Error processing form data:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
   app.get('/logout', (req, res) => {
