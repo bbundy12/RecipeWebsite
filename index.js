@@ -154,7 +154,6 @@ app.get('/recipeSubmitted', (req, res) => {
     res.render('recipeSubmitted');
   });
 
-  // I think we store userId instead of username to localstorage and pull it in that way
   app.get('/userLanding/:username', async (req, res) => {
     try {
         const username = req.params.username;
@@ -223,7 +222,6 @@ app.post('/aggregate_ingredients', async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
-
 
 
 app.post('/storeRecipe', async (req, res) => {
@@ -311,8 +309,74 @@ app.get('/createRecipe', (req, res) => {
     res.render('createRecipe');
   });
 
-  app.get('/editRecipe', (req, res) => {
-    res.render('editRecipe');
-  });
+  app.get('/editRecipe', async (req, res) => {
+    try {
+        const { recipeTitle, username } = req.query;
+
+        // Fetch user details (to ensure correct user and get user_id)
+        const user = await knex('Users').where('username', username).first();
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Fetch recipe details linked to the user
+        const recipe = await knex('Recipes')
+            .where('title', recipeTitle)
+            .andWhere('user_id', user.user_id)
+            .first();
+
+        if (!recipe) {
+            return res.status(404).send('Recipe not found');
+        }
+
+        // Fetch recipe ingredients
+        const ingredients = await knex('Recipe_Ingredients')
+            .join('Ingredients', 'Recipe_Ingredients.ingredient_id', 'Ingredients.ingredient_id')
+            .where('recipe_id', recipe.recipe_id)
+            .select('Ingredients.name', 'Recipe_Ingredients.quantity', 'Recipe_Ingredients.unit');
+
+            res.render('updateRecipe', { recipe, ingredients });
+          } catch (error) {
+              console.error('Error fetching recipe:', error);
+              res.status(500).send('Internal Server Error');
+          }
+});
+
+
+app.post('/updateRecipe', async (req, res) => {
+  try {
+      const { recipe_id, user_id, title, servings, image, description, ingredients } = req.body;
+
+      // Begin a transaction
+      await knex.transaction(async trx => {
+          // Update recipe details
+          await trx('Recipes').where('recipe_id', recipe_id).update({
+              title,
+              servings,
+              image,
+              description
+          });
+
+          // Update each ingredient
+          for (const ingredient of ingredients) {
+              const ingredientRecord = await trx('Ingredients').where('name', ingredient.name).first();
+              if (ingredientRecord) {
+                  await trx('Recipe_Ingredients')
+                      .where('recipe_id', recipe_id)
+                      .andWhere('ingredient_id', ingredientRecord.ingredient_id)
+                      .update({
+                          quantity: ingredient.quantity,
+                          unit: ingredient.unit,
+                      });
+              }
+          }
+      });
+
+      res.redirect('/someSuccessPage'); // Redirect after successful update
+  } catch (error) {
+      console.error('Error updating recipe:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
 app.listen(port, () => console.log("Express App has started and server is listening!"));
