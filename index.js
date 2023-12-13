@@ -168,11 +168,13 @@ app.get("/userLanding/:user_id", async (req, res) => {
 app.get("/recipeView/:title", async (req, res) => {
   try {
     const recipeResult = await knex("recipes").where("title".replace(/\s/g, ""), req.params.title).first();
+    const recipe_id = recipeResult[0].recipe_id
     console.log(recipeResult);
+    console.log(recipe_id);
     if (!recipeResult) {
       return res.status(404).send("Recipe not found");
    }
-   const recipe_id = recipeResult.recipe_id;
+   
     // Fetch the recipe and its related data from the database
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
@@ -297,17 +299,17 @@ app.post('/storeRecipe', upload.single('recipe_image'), async (req, res) => {
         const ingredientid = await ingredientIdPromise
 
         console.log(ingredientid)
-        const recipeIdPromise = knex('recipes')
+        const recipe_idPromise = knex('recipes')
           .select('recipe_id')
           .where('title', '=', req.body.recipe_title)
           .then(rows => rows[0].recipe_id);
 
-        const recipeId = await recipeIdPromise;
-        console.log('Recipe ID:', recipeId);
+        const recipe_id = await recipe_idPromise;
+        console.log('Recipe ID:', recipe_id);
 
         // Use 'await' for the result of the insert into 'recipe_ingredients'
         await knex('recipe_ingredients').insert({
-          recipe_id: recipeId,
+          recipe_id: recipe_id,
           ingredient_id: ingredientid,
           quantity: ingredients[iCount].quantity,
           unit: ingredients[iCount].measurement
