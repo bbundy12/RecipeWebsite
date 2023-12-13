@@ -195,7 +195,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
       .from("recipes")
       .join("recipe_ingredients", "recipes.recipe_id", "recipe_ingredients.recipe_id")
-      .join("Ingredients", "recipe_ingredients.ingredient_id", "ingredients.ingredient_id")
+      .join("ingredients", "recipe_ingredients.ingredient_id", "ingredients.ingredient_id")
       .whereIn("recipes.title", recipes);
 
     // Array to hold aggregated ingredients
@@ -217,7 +217,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
     }
 
     console.log("Success");
-    
+
     // Create an HTML template for the PDF
     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
