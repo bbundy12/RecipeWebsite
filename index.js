@@ -283,7 +283,7 @@ app.post('/storeRecipe', async (req, res) => {
             // ... other recipe data fields ...
             image_path: imagePath,  // Add this line to include the image path
             // timestamp, or other recipe-specific data
-        }).returning("recipe_id");
+        });
         // Additional logic for handling the rest of the recipe data or response
         res.redirect("/recipeSubmitted");
     } catch (error) {
