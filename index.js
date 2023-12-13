@@ -216,6 +216,8 @@ app.post("/aggregate_ingredients", async (req, res) => {
       }
     }
 
+    console.log("Aggregated Ingredients:", aggregatedIngredients);
+
     // Create an HTML template for the PDF
     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
