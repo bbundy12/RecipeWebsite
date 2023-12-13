@@ -153,7 +153,7 @@ app.get("/recipeSubmitted", (req, res) => {
   res.render("recipeSubmitted");
 });
 
-app.get("/userLanding/:user_id", async (req, res) => {
+app.post("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
     const recipes = await knex("recipes").where("user_id", user_id).select("title");
@@ -170,9 +170,7 @@ app.get("/recipeView/:recipe_id", async (req, res) => {
     const recipe_id = req.params.recipe_id;
 
     // Fetch the recipe and its related data from the database
-    const recipe = await knex("recipes")
-      .where("recipe_id", recipe_id)
-      .first(); // Assuming you expect only one recipe per recipe_id
+    const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
       .join("recipe_ingredients", "ingredients.ingredient_id", "recipe_ingredients.ingredient_id")
       .select("ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
