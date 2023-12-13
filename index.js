@@ -248,21 +248,24 @@ app.post('/storeRecipe', async (req, res) => {
 
 
     // Use Knex transactions to ensure atomicity
-    await knex.transaction(async (trx) => {
+    await knex.transaction(async () => {
       // Insert into the recipes table
-      const [recipeId] = await trx('recipes').insert({
-        title: recipe_title,
-        servings,
-        recipe_instructions: recipe_instructions
+      const imagePath = req.file ? req.file.path : null;
+      knex('recipes').insert({
+        title: req.body.recipe_title,
+        servings: req.body.servings,
+        recipe_instructions: recipe_instructions,
+        image: imagePath
+
       }).returning('recipe_id');
 
       // Insert into the ingredients table and recipe_ingredients junction table
       for (const ingredient of ingredients) {
-        const [ingredientId] = await trx('ingredients').insert({
+        knex('ingredients').insert({
           name: ingredient.name
         }).returning('ingredient_id').then( async (ingredientId) => {
         
-        const recipeIdPromise = trx('recipes')
+        const recipeIdPromise = knex('recipes')
           .select('recipe_id')
           .where('title', '=', req.body.recipe_title)
           .then(rows => rows[0].recipe_id);
@@ -271,28 +274,12 @@ app.post('/storeRecipe', async (req, res) => {
         console.log('Recipe ID:', recipeId);
 
         const ingredientid = ingredientId[0].ingredient_id
-        await trx('recipe_ingredients').insert({
+        await knex('recipe_ingredients').insert({
           recipe_id: recipeId,
           ingredient_id: ingredientid,
           quantity: ingredient.quantity,
           unit: ingredient.measurement
         })});
-
-         // Extract the path of the uploaded file
-    const imagePath = req.file ? req.file.path : null;
-    try {
-        // Add the image path to your recipe data insertion
-        const recipeId = await knex("recipes").insert({
-            // ... other recipe data fields ...
-            image_path: imagePath,  // Add this line to include the image path
-            // timestamp, or other recipe-specific data
-        });
-        // Additional logic for handling the rest of the recipe data or response
-        res.redirect("/recipeSubmitted");
-    } catch (error) {
-        console.error("Error storing recipe:", error);
-        res.status(500).send("Internal Server Error");
-    }
       }
     });
 
