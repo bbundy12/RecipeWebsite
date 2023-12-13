@@ -260,7 +260,7 @@ app.post('/storeRecipe', async (req, res) => {
         .returning('recipe_id');
 
       // Insert into the ingredients table and recipe_ingredients junction table
-      for (const ingredient of ingredients) {
+      for (let iCount = 0; iCount < ingredients.length; iCount++) {
         // Use 'await' for the result of the insert and 'returning'
         console.log(ingredient)
         await knex('ingredients')
