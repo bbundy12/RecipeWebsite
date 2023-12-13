@@ -165,7 +165,7 @@ app.get("/userLanding/:user_id", async (req, res) => {
   }
 });
 
-app.get("/recipeView", async (req, res) => {
+app.get("/recipeView/:title", async (req, res) => {
   try {
     const recipe_id = knex("recipes").where("title", req.params.title).first();
 
