@@ -192,11 +192,11 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
     // Query to get ingredients
     const ingredientsQuery = await knex
-      .select("Recipes.title", "Ingredients.name", "Recipe_Ingredients.unit", "Recipe_Ingredients.quantity")
-      .from("Recipes")
-      .join("Recipe_Ingredients", "Recipes.recipe_id", "Recipe_Ingredients.recipe_id")
-      .join("Ingredients", "Recipe_Ingredients.ingredient_id", "Ingredients.ingredient_id")
-      .whereIn("Recipes.title", recipes);
+      .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
+      .from("recipes")
+      .join("recipe_ingredients", "recipes.recipe_id", "recipe_ingredients.recipe_id")
+      .join("Ingredients", "recipe_ingredients.ingredient_id", "ingredients.ingredient_id")
+      .whereIn("recipes.title", recipes);
 
     // Array to hold aggregated ingredients
     let aggregatedIngredients = [];
@@ -216,6 +216,8 @@ app.post("/aggregate_ingredients", async (req, res) => {
       }
     }
 
+    console.log("Success");
+    
     // Create an HTML template for the PDF
     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
