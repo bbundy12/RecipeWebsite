@@ -153,7 +153,7 @@ app.get("/recipeSubmitted", (req, res) => {
   res.render("recipeSubmitted");
 });
 
-app.post("/userLanding/:user_id", async (req, res) => {
+app.get("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
     const recipes = await knex("recipes").where("user_id", user_id).select("title");
