@@ -165,8 +165,25 @@ app.get("/userLanding/:user_id", async (req, res) => {
   }
 });
 
-app.get("/recipeView", (req, res) => {
-  res.render("recipeView");
+app.get("/recipeView/:recipe_id", async (req, res) => {
+  try {
+    const recipe_id = req.params.recipe_id;
+
+    // Fetch the recipe and its related data from the database
+    const recipe = await knex("recipes")
+      .where("recipe_id", recipe_id)
+      .first(); // Assuming you expect only one recipe per recipe_id
+    const ingredients = await knex("ingredients")
+      .join("recipe_ingredients", "ingredients.ingredient_id", "recipe_ingredients.ingredient_id")
+      .select("ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
+      .where("recipe_ingredients.recipe_id", recipe_id);
+
+    // Render the view with the fetched data
+    res.render("recipeView", { recipe, ingredients });
+  } catch (error) {
+    console.error("Error fetching recipe:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // POST route to aggregate ingredients for selected recipes
