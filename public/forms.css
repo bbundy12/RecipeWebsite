@@ -47,6 +47,7 @@ form p {
 input[type="text"],
 input[type="number"],
 input[type="password"],
+input[type="file"],
 select,
 textarea {
   margin: 0 0 30px 0;
