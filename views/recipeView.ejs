@@ -16,7 +16,7 @@
   <link rel="icon" href="/favicon.png" type="image/x-icon">
   <!-- CSS -->
   <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/recipeView.css">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,34 +27,34 @@
   <div id="body-content">
     <!-- Navbar -->
     <nav>
-      <a href="/editUser">Edit Account Info</a>
-      <a href="/logout">Log Out</a>
+      <a href="/userLanding">Back to Recipes</a>
+      <div>
+        <a href="/editRecipe">Edit Recipe</a>
+        <a href="/deleteRecipe">Delete Recipe</a>
+      </div>
     </nav>
 
-    <header>
-      <h2>Welcome!</h2>
-      <p>View your current recipies below and decide what you want to add to your shopping list.</p>
-      <a href="/createRecipe">Create Recipe</a>
-    </header>
-
-    <h3>Select Recipes</h3>
-    <form action="/aggregate_ingredients" method="post">
-      <div id="recipe-card-container">
-        <% recipes.forEach(recipe=> { %>
-          <div class="recipe-card" style="background-image: url('<%= recipe.image %>');">
-            <h4>
-              <%= recipe.title %>
-            </h4>
-            <a href="/recipe_view">View Recipe</a>
-            <div class="token-container">
-              <input id="<%= recipe.title %>" value="<%= recipe.title %>" name="selected-recipes" type="checkbox" />
-              <label for="<%= recipe.title %>" class="token">Add to Shopping List</label>
-            </div>
-          </div>
-          <% }); %>
-      </div>
-      <button type="submit">Generate Grocery List</button>
-    </form>
+    <main>
+      <h2 id="recipe-title">
+        <%= recipe.title %>
+      </h2>
+      <img src="<%= recipe.image %>" alt="Recipe Image">
+      <h4>Servings</h4>
+      <p id="servings">
+        <%= recipe.servings %>
+      </p>
+      <h4>Ingredients</h4>
+      <ul id="ingredient-list">
+        <li>
+          <%= ingredients.name %>, <%= recipe_ingredients.quantity %>
+              <%= recipe_ingredients.unit %>
+        </li>
+      </ul>
+      <h4>Recipe Description</h4>
+      <p class="ingredient-name">
+        <%= recipe.description %>
+      </p>
+    </main>
 
     <!-- Footer -->
     <footer>

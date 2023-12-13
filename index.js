@@ -244,6 +244,9 @@ app.post('/storeRecipe', async (req, res) => {
       }
     });
 
+    console.log('Ingredients:', ingredients);
+
+
     // Use Knex transactions to ensure atomicity
     await knex.transaction(async (trx) => {
       // Insert into the recipes table
@@ -264,7 +267,8 @@ app.post('/storeRecipe', async (req, res) => {
           .where('title', '=', req.body.recipe_title)
           .then(rows => rows[0].recipe_id);
       
-        const [recipeId] = await recipeIdPromise;
+        const recipeId = await recipeIdPromise;
+        console.log('Recipe ID:', recipeId);
 
         const ingredientid = ingredientId[0].ingredient_id
         await trx('recipe_ingredients').insert({
@@ -282,7 +286,7 @@ app.post('/storeRecipe', async (req, res) => {
             // ... other recipe data fields ...
             image_path: imagePath,  // Add this line to include the image path
             // timestamp, or other recipe-specific data
-        }).returning("recipe_id");
+        });
         // Additional logic for handling the rest of the recipe data or response
         res.redirect("/recipeSubmitted");
     } catch (error) {
