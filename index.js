@@ -295,8 +295,6 @@ app.post('/storeRecipe', async (req, res) => {
 });
 
 
-
-
   app.get('/logout', (req, res) => {
     res.render('logoutSuccessful');
   })
