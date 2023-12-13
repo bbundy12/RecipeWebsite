@@ -149,7 +149,7 @@ app.get("/login", (req, res) => {
   res.render("loginUser");
 });
 
-app.get("/recipeSubmitted", (req, res) => {
+app.get("/recipeSubmitted/:user_id", (req, res) => {
   res.render("recipeSubmitted");
 });
 
@@ -167,17 +167,8 @@ app.get("/userLanding/:user_id", async (req, res) => {
 
 app.get("/recipeView/:title", async (req, res) => {
   try {
-    const recipeResult = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
-   
-    console.log(recipeResult);
-    
-    if (!recipeResult) {
-      return res.status(404).send("Recipe not found");
-   }
-   
-   const recipe_id = recipeResult.recipe_id;
-   console.log(recipe_id);
-   
+    const recipe_id = knex("recipes").where("title".replace(/\s/g, ""), req.params.title).first();
+
     // Fetch the recipe and its related data from the database
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
@@ -256,7 +247,6 @@ app.post('/storeRecipe', upload.single('recipe_image'), async (req, res) => {
   try {
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
-
     
 
     // Iterate through form data to collect ingredient information
@@ -302,17 +292,17 @@ app.post('/storeRecipe', upload.single('recipe_image'), async (req, res) => {
         const ingredientid = await ingredientIdPromise
 
         console.log(ingredientid)
-        const recipe_idPromise = knex('recipes')
+        const recipeIdPromise = knex('recipes')
           .select('recipe_id')
           .where('title', '=', req.body.recipe_title)
           .then(rows => rows[0].recipe_id);
 
-        const recipe_id = await recipe_idPromise;
-        console.log('Recipe ID:', recipe_id);
+        const recipeId = await recipeIdPromise;
+        console.log('Recipe ID:', recipeId);
 
         // Use 'await' for the result of the insert into 'recipe_ingredients'
         await knex('recipe_ingredients').insert({
-          recipe_id: recipe_id,
+          recipe_id: recipeId,
           ingredient_id: ingredientid,
           quantity: ingredients[iCount].quantity,
           unit: ingredients[iCount].measurement
@@ -320,7 +310,7 @@ app.post('/storeRecipe', upload.single('recipe_image'), async (req, res) => {
       }
     });
 
-    res.redirect('/recipeSubmitted');
+    res.redirect('/recipeSubmitted/' + user_id);
   } catch (error) {
     console.error('Error processing form data:', error);
     res.status(500).send('Internal Server Error');
@@ -401,5 +391,7 @@ app.post("/updateRecipe", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
 
 app.listen(port, () => console.log("Express App has started and server is listening!"));
