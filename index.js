@@ -264,7 +264,8 @@ app.post('/storeRecipe', async (req, res) => {
           .where('title', '=', req.body.recipe_title)
           .then(rows => rows[0].recipe_id);
       
-        const [recipeId] = await recipeIdPromise;
+        const recipeId = await recipeIdPromise;
+        console.log('Recipe ID:', recipeId);
 
         const ingredientid = ingredientId[0].ingredient_id
         await trx('recipe_ingredients').insert({
