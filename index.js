@@ -69,24 +69,26 @@ app.get("/createUser", (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
-    try {
-        // Check if the username and password match a user in the database
-        const users = await knex.select('username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
+  try {
+      // Check if the username and password match a user in the database
+      const users = await knex.select('user_id','username', 'password').from('users').where('username', req.body.username).andWhere('password', req.body.password);
 
-        console.log('Number of results:', users.length);
+      console.log('Number of results:', users.length);
 
-        if (users.length == 1) {
-            // If at least one user is found, you can redirect to a different route or render a page
-            res.redirect('/userLanding/${users[0].username}');
-        }
-        else {
-            // If no user is found, you can render the login page with an error message
-            res.render('loginUser', { error: 'Invalid username or password' });
-        }
-    } catch (err) {
-        console.error('Error logging in:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+      const user_id = users[0].user_id
+
+      if (users.length == 1) {
+          // If at least one user is found, you can redirect to a different route or render a page
+          res.redirect('/userLanding/' + user_id);
+      }
+      else {
+          // If no user is found, you can render the login page with an error message
+          res.render('loginUser', { error: 'Invalid username or password' });
+      }
+  } catch (err) {
+      console.error('Error logging in:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
   
 
@@ -154,12 +156,12 @@ app.get('/recipeSubmitted', (req, res) => {
     res.render('recipeSubmitted');
   });
 
-  app.get('/userLanding/:username', async (req, res) => {
+  app.get('/userLanding/:user_id', async (req, res) => {
     try {
-        const username = req.params.username;
-        const recipes = await knex('recipes').where('username', username).select('title');
+        const user_id = req.params.user_id;
+        const recipes = await knex('recipes').where('user_id', user_id).select('title');
 
-        res.render('selectRecipes', { recipes });
+        res.render('userLanding', { recipes });
     } catch (error) {
         console.error('Error fetching recipes:', error);
         res.status(500).send('Internal Server Error');
