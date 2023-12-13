@@ -45,10 +45,14 @@
       </p>
       <h4>Ingredients</h4>
       <ul id="ingredient-list">
-        <li>
-          <%= ingredients.name %>, <%= recipe_ingredients.quantity %>
-              <%= recipe_ingredients.unit %>
-        </li>
+        <% ingredients.forEach(ingredient=> { %>
+
+          <li>
+            <%= ingredient.name %>, <%= ingredient.quantity %>
+                <%= ingredient.unit %>
+          </li>
+          <% }); %>
+
       </ul>
       <h4>Recipe Description</h4>
       <p class="ingredient-name">
