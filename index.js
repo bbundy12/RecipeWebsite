@@ -252,7 +252,7 @@ app.post('/storeRecipe', async (req, res) => {
       const imagePath = req.file ? req.file.path : null;
 
       // Use 'await' to capture the result of the insert and 'returning'
-      const [recipeId] = await knex('recipes')
+      await knex('recipes')
         .insert({
           title: req.body.recipe_title,
           servings: req.body.servings,
@@ -264,7 +264,7 @@ app.post('/storeRecipe', async (req, res) => {
       // Insert into the ingredients table and recipe_ingredients junction table
       for (const ingredient of ingredients) {
         // Use 'await' for the result of the insert and 'returning'
-        const [ingredientId] = await knex('ingredients')
+        await knex('ingredients')
           .insert({ name: ingredient.name })
           .returning('ingredient_id');
 
