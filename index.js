@@ -168,6 +168,7 @@ app.get("/userLanding/:user_id", async (req, res) => {
 app.get("/recipeView/:title", async (req, res) => {
   try {
     const recipeResult = await knex("recipes").where("title".replace(/\s/g, ""), req.params.title).first();
+    console.log(recipeResult);
     if (!recipeResult) {
       return res.status(404).send("Recipe not found");
    }
