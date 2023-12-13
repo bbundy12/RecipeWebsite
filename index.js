@@ -244,6 +244,9 @@ app.post('/storeRecipe', async (req, res) => {
       }
     });
 
+    console.log('Ingredients:', ingredients);
+
+
     // Use Knex transactions to ensure atomicity
     await knex.transaction(async (trx) => {
       // Insert into the recipes table
