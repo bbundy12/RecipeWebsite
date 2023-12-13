@@ -99,12 +99,12 @@ form {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  width: 80%;
+  width: 90%;
 }
 
 .recipe-card {
   padding: 20px;
-  width: 400px;
+  width: 350px;
   margin: 20px;
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
