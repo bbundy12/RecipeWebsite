@@ -309,37 +309,37 @@ app.get('/createRecipe', (req, res) => {
     res.render('createRecipe');
   });
 
-  app.get('/editRecipe', async (req, res) => {
-    try {
-        const { recipeTitle, username } = req.query;
+app.get('/editRecipe', async (req, res) => {
+  try {
+      const { recipeTitle, username } = req.query;
 
-        // Fetch user details (to ensure correct user and get user_id)
-        const user = await knex('Users').where('username', username).first();
-        if (!user) {
-            return res.status(404).send('User not found');
+      // Fetch user details (to ensure correct user and get user_id)
+      const user = await knex('Users').where('username', username).first();
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      // Fetch recipe details linked to the user
+      const recipe = await knex('Recipes')
+          .where('title', recipeTitle)
+          .andWhere('user_id', user.user_id)
+          .first();
+
+      if (!recipe) {
+          return res.status(404).send('Recipe not found');
+      }
+
+      // Fetch recipe ingredients
+      const ingredients = await knex('Recipe_Ingredients')
+          .join('Ingredients', 'Recipe_Ingredients.ingredient_id', 'Ingredients.ingredient_id')
+          .where('recipe_id', recipe.recipe_id)
+          .select('Ingredients.name', 'Recipe_Ingredients.quantity', 'Recipe_Ingredients.unit');
+
+          res.render('updateRecipe', { recipe, ingredients });
+        } catch (error) {
+            console.error('Error fetching recipe:', error);
+            res.status(500).send('Internal Server Error');
         }
-
-        // Fetch recipe details linked to the user
-        const recipe = await knex('Recipes')
-            .where('title', recipeTitle)
-            .andWhere('user_id', user.user_id)
-            .first();
-
-        if (!recipe) {
-            return res.status(404).send('Recipe not found');
-        }
-
-        // Fetch recipe ingredients
-        const ingredients = await knex('Recipe_Ingredients')
-            .join('Ingredients', 'Recipe_Ingredients.ingredient_id', 'Ingredients.ingredient_id')
-            .where('recipe_id', recipe.recipe_id)
-            .select('Ingredients.name', 'Recipe_Ingredients.quantity', 'Recipe_Ingredients.unit');
-
-            res.render('updateRecipe', { recipe, ingredients });
-          } catch (error) {
-              console.error('Error fetching recipe:', error);
-              res.status(500).send('Internal Server Error');
-          }
 });
 
 
