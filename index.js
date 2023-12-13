@@ -342,11 +342,11 @@ app.get('/createRecipe', (req, res) => {
             .where('recipe_id', recipe.recipe_id)
             .select('Ingredients.name', 'Recipe_Ingredients.quantity', 'Recipe_Ingredients.unit');
 
-        res.render('editRecipe', { recipe, ingredients });
-    } catch (error) {
-        console.error('Error fetching recipe:', error);
-        res.status(500).send('Internal Server Error');
-    }
+            res.render('updateRecipe', { recipe, ingredients });
+          } catch (error) {
+              console.error('Error fetching recipe:', error);
+              res.status(500).send('Internal Server Error');
+          }
 });
 
 
