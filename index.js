@@ -168,16 +168,16 @@ app.get("/userLanding/:user_id", async (req, res) => {
 app.get("/recipeView/:title", async (req, res) => {
   try {
     const recipeResult = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
-   
+
     console.log(recipeResult);
-    
+
     if (!recipeResult) {
       return res.status(404).send("Recipe not found");
-   }
-   
-   const recipe_id = recipeResult.recipe_id;
-   console.log(recipe_id);
-   
+    }
+
+    const recipe_id = recipeResult.recipe_id;
+    console.log(recipe_id);
+
     // Fetch the recipe and its related data from the database
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
@@ -192,7 +192,6 @@ app.get("/recipeView/:title", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 // // POST route to aggregate ingredients for selected recipes
 // app.post("/aggregate_ingredients", async (req, res) => {
@@ -253,77 +252,77 @@ app.get("/recipeView/:title", async (req, res) => {
 //   }
 // });
 
-app.post('/storeRecipe', upload.single('recipe_image'), async (req, res) => {
+app.post("/storeRecipe", upload.single("recipe_image"), async (req, res) => {
   try {
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
-    
 
     // Iterate through form data to collect ingredient information
-    Object.keys(req.body).forEach(key => {
-      if (key.startsWith('ingredient_name_')) {
-        const uniqueCounter = key.split('_')[2]; // Extract uniqueCounter from key
+    Object.keys(req.body).forEach((key) => {
+      if (key.startsWith("ingredient_name_")) {
+        const uniqueCounter = key.split("_")[2]; // Extract uniqueCounter from key
         const ingredient = {
           name: req.body[`ingredient_name_${uniqueCounter}`],
           quantity: req.body[`quantity_${uniqueCounter}`],
-          measurement: req.body[`measurement_${uniqueCounter}`]
+          measurement: req.body[`measurement_${uniqueCounter}`],
         };
         ingredients.push(ingredient);
       }
     });
 
-    const queryResult = await knex('users').select('user_id').where('username', req.body.username);
+    const queryResult = await knex("users").select("user_id").where("username", req.body.username);
     const user_id = queryResult[0].user_id;
 
-    console.log('Ingredients:', ingredients);
+    console.log("Ingredients:", ingredients);
 
     // Use Knex transactions to ensure atomicity
     await knex.transaction(async () => {
       // Insert into the recipes table
 
       // Use 'await' to capture the result of the insert and 'returning'
-      await knex('recipes')
+      await knex("recipes")
         .insert({
           title: req.body.recipe_title,
           user_id: user_id,
           servings: req.body.servings,
           recipe_instructions: recipe_instructions,
         })
-        .returning('recipe_id');
+        .returning("recipe_id");
 
       // Insert into the ingredients table and recipe_ingredients junction table
       for (let iCount = 0; iCount < ingredients.length; iCount++) {
         // Use 'await' for the result of the insert and 'returning'
-        await knex('ingredients')
-          .insert({ name: ingredients[iCount].name })
-          .returning('ingredient_id');
-        
-        const ingredientIdPromise = knex('ingredients').select('ingredient_id').where('name', ingredients[iCount].name).then(rows => rows[0].ingredient_id);
-        const ingredientid = await ingredientIdPromise
+        await knex("ingredients").insert({ name: ingredients[iCount].name }).returning("ingredient_id");
 
-        console.log(ingredientid)
-        const recipeIdPromise = knex('recipes')
-          .select('recipe_id')
-          .where('title', '=', req.body.recipe_title)
-          .then(rows => rows[0].recipe_id);
+        const ingredientIdPromise = knex("ingredients")
+          .select("ingredient_id")
+          .where("name", ingredients[iCount].name)
+          .then((rows) => rows[0].ingredient_id);
+        const ingredientid = await ingredientIdPromise;
+
+        console.log(ingredientid);
+        const recipeIdPromise = knex("recipes")
+          .select("recipe_id")
+          .where("title", "=", req.body.recipe_title)
+          .then((rows) => rows[0].recipe_id);
 
         const recipeId = await recipeIdPromise;
-        console.log('Recipe ID:', recipeId);
+        console.log("Recipe ID:", recipeId);
 
         // Use 'await' for the result of the insert into 'recipe_ingredients'
-        await knex('recipe_ingredients').insert({
+        await knex("recipe_ingredients").insert({
           recipe_id: recipeId,
           ingredient_id: ingredientid,
           quantity: ingredients[iCount].quantity,
-          unit: ingredients[iCount].measurement
+          unit: ingredients[iCount].measurement,
         });
       }
     });
 
-    res.redirect('/recipeSubmitted/' + user_id);
+    res.redirect("/recipeSubmitted/" + user_id);
   } catch (error) {
-    console.error('Error processing form data:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error processing form data:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -401,7 +400,5 @@ app.post("/updateRecipe", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 app.listen(port, () => console.log("Express App has started and server is listening!"));
