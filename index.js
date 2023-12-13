@@ -14,6 +14,17 @@ const port = process.env.PORT;
 
 const puppeteer = require('puppeteer');
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+});
+const upload = multer({ storage: storage });
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -247,14 +258,37 @@ app.post('/storeRecipe', async (req, res) => {
         const [ingredientId] = await trx('ingredients').insert({
           name: ingredient.name
         }).returning('ingredient_id').then( async (ingredientId) => {
+        
+        const recipeIdPromise = trx('recipes')
+          .select('recipe_id')
+          .where('title', '=', req.body.recipe_title)
+          .then(rows => rows[0].recipe_id);
+      
+        const [recipeId] = await recipeIdPromise;
+
         const ingredientid = ingredientId[0].ingredient_id
-        const recipeid = ingredientId[0].recipe_id
         await trx('recipe_ingredients').insert({
-          recipe_id: recipeid,
+          recipe_id: recipeId,
           ingredient_id: ingredientid,
           quantity: ingredient.quantity,
           unit: ingredient.measurement
         })});
+
+         // Extract the path of the uploaded file
+    const imagePath = req.file ? req.file.path : null;
+    try {
+        // Add the image path to your recipe data insertion
+        const recipeId = await knex("recipes").insert({
+            // ... other recipe data fields ...
+            image_path: imagePath,  // Add this line to include the image path
+            // timestamp, or other recipe-specific data
+        }).returning("recipe_id");
+        // Additional logic for handling the rest of the recipe data or response
+        res.redirect("/recipeSubmitted");
+    } catch (error) {
+        console.error("Error storing recipe:", error);
+        res.status(500).send("Internal Server Error");
+    }
       }
     });
 
@@ -276,6 +310,10 @@ app.get('/accountCreated', (req, res) => {
 
 app.get('/createRecipe', (req, res) => {
     res.render('createRecipe');
+  });
+
+  app.get('/editRecipe', (req, res) => {
+    res.render('editRecipe');
   });
 
 app.listen(port, () => console.log("Express App has started and server is listening!"));
