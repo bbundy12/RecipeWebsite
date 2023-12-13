@@ -10,8 +10,7 @@ CREATE TABLE Users (
 CREATE TABLE Ingredients (
     ingredient_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
     PRIMARY KEY (ingredient_id),
-    name VARCHAR(50) NOT NULL,
-    category VARCHAR(50)
+    name VARCHAR(50) NOT NULL
 );
 
 -- Recipes Table
@@ -21,7 +20,8 @@ CREATE TABLE Recipes (
     user_id INTEGER REFERENCES Users(user_id),
     title VARCHAR(100) NOT NULL,
     servings INTEGER NOT NULL,
-    image VARCHAR(100) NOT NULL
+    image VARCHAR(100) NOT NULL,
+    description VARCHAR(250) NOT NULL
 );
 
 -- Recipe Ingredients Junction Table
