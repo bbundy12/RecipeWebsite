@@ -1,0 +1,149 @@
+#body-content {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+nav {
+  width: calc(100vw - 40px);
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--secondary-dark);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+}
+
+nav a {
+  color: white;
+  background-color: var(--secondary-dark);
+  border: 2px solid white;
+  font-size: 1.2em;
+  font-weight: 500;
+  padding: 5px 10px;
+  margin: 0 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.35s ease-in-out;
+  border-radius: 5px;
+}
+
+nav a:hover {
+  color: var(--secondary-dark);
+  background-color: white;
+  border: 2px transparent solid;
+}
+
+main {
+  width: 60vw;
+  padding: 100px 0;
+}
+
+main h2 {
+  font-size: 3.5em;
+  font-weight: 700;
+  color: var(--secondary-dark);
+  margin: 0;
+  text-align: left;
+}
+
+header p {
+  font-size: 1.25em;
+  font-weight: 300;
+  color: var(--secondary-dark);
+  margin: 0;
+  text-align: center;
+  max-width: 1000px;
+}
+
+header a {
+  background-color: var(--primary-color);
+  color: white;
+  border: 2px transparent solid;
+  font-size: 1.2em;
+  font-weight: 500;
+  padding: 15px 20px;
+  margin: 20px 0 0 0;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.35s ease-in-out;
+  border-radius: 5px;
+}
+
+header a:hover {
+  color: var(--primary-color);
+  background-color: white;
+  border: 2px solid var(--primary-color);
+}
+
+h3 {
+  color: var(--primary-color);
+  font-size: 2em;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#recipe-card-container {
+  margin: 0 10% 50px 10%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+}
+
+.recipe-card {
+  padding: 20px;
+  width: 400px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+h4 {
+  font-size: 1em;
+  margin: 4em 0 0 0;
+}
+
+/* Mobile */
+@media only screen and (max-width: 680px) {
+  body {
+    font-size: 12px;
+  }
+
+  nav p {
+    margin: 0 20px 0 0;
+  }
+
+  nav p small {
+    display: none;
+  }
+
+  nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  footer {
+    width: calc(100vw - 100px);
+    margin: 50px 0 0 0;
+    padding: 0 50px;
+  }
+
+  footer :last-child {
+    text-align: right;
+  }
+
+  footer :first-child {
+    text-align: left;
+  }
+}

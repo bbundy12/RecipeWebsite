@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- 
+  Section 003
+  Group 15
+  Brendan Bundy, Jakob Blosil, McKenna Alder, Tanner Atkin
+
+  This page allows a user to view the dashboard, and individual survey responses.
+ -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Home</title>
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/recipeView.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="body-content">
+    <!-- Navbar -->
+    <nav>
+      <a href="/userLanding">Back to Recipes</a>
+      <div>
+        <a href="/editRecipe">Edit Recipe</a>
+        <a href="/deleteRecipe">Delete Recipe</a>
+      </div>
+    </nav>
+
+    <main>
+      <h2 id="recipe-title">
+        <%= recipe.title %>
+      </h2>
+      <h4>Servings</h4>
+      <p id="servings">
+        <%= recipe.servings %>
+      </p>
+      <h4>Ingredients</h4>
+      <ul id="ingredient-list">
+        <li>
+          <%= ingredients.name %>, <%= recipe_ingredients.quantity %>
+              <%= recipe_ingredients.unit %>
+        </li>
+      </ul>
+      <h4>Recipe Description</h4>
+      <p class="ingredient-name">
+        <%= recipe.description %>
+      </p>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2023, Incorperated Inc.</p>
+      <p>Updated December 2023</p>
+    </footer>
+  </div>
+</body>
+
+</html>
