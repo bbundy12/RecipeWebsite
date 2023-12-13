@@ -57,7 +57,11 @@
       </div>
       <button type="submit">Generate Grocery List</button>
     </form>
-
+    <script>
+      // Save user_id to local storage
+      const userId = "<%= user_id %>";
+      localStorage.setItem("user_id", userId);
+    </script>
     <!-- Footer -->
     <footer>
       <p>© 2023, Incorperated Inc.</p>
