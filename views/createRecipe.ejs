@@ -101,6 +101,8 @@
     <p>Recipe Image</p>
     <input type="file" name="recipe_image" accept="image/*" required />
 
+    <input name="username" id="usernameInput" value="" type="hidden" />
+
     <!-- Create Recipe -->
     <button type="submit">Create Recipe</button>
   </form>
@@ -161,6 +163,13 @@
       const elementToRemove = document.getElementById(uniqueId);
       container.removeChild(elementToRemove);
     }
+
+        // Retrieve the username from localStorage
+    const storedUsername = localStorage.getItem('username');
+
+    // Set the value of the input field
+    document.getElementById('usernameInput').value = storedUsername;
+
   </script>
 </body>
 

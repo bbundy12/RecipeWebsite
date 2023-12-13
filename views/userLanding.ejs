@@ -46,7 +46,7 @@
             <%= recipe.title %>
           </h4>
           <!-- <a href="/recipeView/">View Recipe</a> -->
-          <form action="/recipeView/<%= recipe.title.replace(/\s/g, "") %>" method="get">
+          <form action="/recipeView/<%= recipe.title %>" method="get">
             <button type="submit">View Recipe</button>
           </form>
           <!-- <div class="token-container">
