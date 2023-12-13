@@ -29,7 +29,8 @@ select,
 button,
 .radioSelector div,
 table,
-textarea {
+textarea,
+li {
   font-family: "Poppins", sans-serif;
 }
 
