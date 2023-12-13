@@ -167,8 +167,11 @@ app.get("/userLanding/:user_id", async (req, res) => {
 
 app.get("/recipeView/:title", async (req, res) => {
   try {
-    const recipe_id = knex("recipes").where("title".replace(/\s/g, ""), req.params.title).first();
-
+    const recipeResult = await knex("recipes").where("title".replace(/\s/g, ""), req.params.title).first();
+    if (!recipeResult) {
+      return res.status(404).send("Recipe not found");
+   }
+   const recipe_id = recipeResult.recipe_id;
     // Fetch the recipe and its related data from the database
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
