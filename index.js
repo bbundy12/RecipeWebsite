@@ -150,7 +150,7 @@ app.get("/recipeSubmitted/:user_id", (req, res) => {
 app.get("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
-    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image");
+    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
     console.log(recipes);
     res.render("userLanding", { recipes, user_id});
   } catch (error) {
@@ -402,9 +402,9 @@ app.post("/updateRecipe", async (req, res) => {
   }
 });
 
-app.delete("/deleteRecipe/:recipe_id", async (req, res) => {
+app.get("/deleteRecipe/:recipe_id", async (req, res) => {
   try {
-    const recipe_id = req.params.recipe_id;
+    const title = req.params.recipe_id;
 
     // Begin a transaction for data consistency
     await knex.transaction(async (trx) => {
