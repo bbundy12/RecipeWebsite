@@ -411,7 +411,7 @@ app.post("/updateRecipe", async (req, res) => {
         } else {
 
           // Add new ingredient
-          const newIngredientResult = await trx("ingredients").insert({ name: ingredient.name }).returning("ingredient_id").first();
+          const newIngredientResult = await trx("ingredients").insert({ name: ingredient.name }).returning("ingredient_id");
           const newIngredientId = newIngredientResult[0].ingredient_id;
           console.log(typeof newIngredientId, newIngredientId);
 
