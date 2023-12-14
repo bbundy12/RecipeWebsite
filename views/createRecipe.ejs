@@ -169,12 +169,18 @@
       container.removeChild(elementToRemove);
     }
 
+  function loadUsername() { 
     // Retrieve the username from localStorage
     const storedUsername = localStorage.getItem('username');
 
     // Set the value of the input field
     document.getElementById('usernameInput').value = storedUsername;
+  }
 
+  // Use the DOMContentLoaded event to ensure the DOM is fully loaded before running the code
+  document.addEventListener('DOMContentLoaded', function() {
+      loadUsername();
+  });
   </script>
 </body>
 
