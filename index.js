@@ -198,8 +198,7 @@ app.get("/shoppingList/:user_id", async (req, res) => {
 app.post("/aggregate_ingredients", async (req, res) => {
   try {
     // Extract selected recipe names from the request
-    const title = req.body.selected-recipes;
-    
+    const title = req.body.selected - recipes;
 
     console.log("Recipes", title);
     // Query to get ingredients
@@ -232,7 +231,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
     console.log("Aggregated Ingredients:", aggregatedIngredients);
 
     // Create an HTML template for the PDF
-    let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
+    let htmlContent = `<html><head><link rel="stylesheet" href="/pdf.css"></head><body>`;
     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
     aggregatedIngredients.forEach((ingredient) => {
       htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
