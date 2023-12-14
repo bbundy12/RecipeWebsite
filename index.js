@@ -368,15 +368,8 @@ app.post("/updateRecipe", async (req, res) => {
     const recipe_instructions = req.body.recipe_instructions;
     const recipe_id = req.body.recipe_id;
 
-    console.log(title, servings, recipe_instructions);
-    console.log(recipe_id);
-
-    console.log(recipe_id);
-
     const useridprom = await knex("recipes").where("recipe_id", recipe_id).select('user_id');
     const user_id = useridprom[0].user_id;
-
-    console.log(user_id);
 
     const ingredients = [];
     Object.keys(req.body).forEach(key => {
@@ -390,8 +383,6 @@ app.post("/updateRecipe", async (req, res) => {
         });
       }
     });
-    
-    console.log(ingredients);
 
     // Begin a transaction
     await knex.transaction(async (trx) => {
@@ -403,8 +394,9 @@ app.post("/updateRecipe", async (req, res) => {
       });
 
       // Update each ingredient
+      const submittedIngredientIds = [];
       for (const ingredient of ingredients) {
-
+        if (ingredient.ingredient_id) {
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredient.ingredient_id).update({
             quantity: ingredient.quantity,
             unit: ingredient.unit,
@@ -413,10 +405,39 @@ app.post("/updateRecipe", async (req, res) => {
           await trx("ingredients").where("ingredient_id", ingredient.ingredient_id).update({
             name: ingredient.name
           });
-        }
 
-      await trx.commit();
-    });
+          // Create an array of the ingredients submitted
+          submittedIngredientIds.push(ingredient.ingredient_id);
+        } else {
+
+          // Add new ingredient
+          const newIngredientId = await trx("ingredients").insert({ name: ingredient.name }).returning("ingredient_id");
+          await trx("recipe_ingredients").insert({
+            recipe_id: recipe_id,
+            ingredient_id: newIngredientId[0],
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+        });
+      }
+      
+      // Get original ingredient IDs from the form
+      let originalIngredientIds = req.body['original-ingredient-ids'] || [];
+      if (typeof originalIngredientIds === 'string') {
+        originalIngredientIds = [originalIngredientIds]; // Ensure it's an array
+      }
+
+      // Delete removed ingredients
+      for (const id of originalIngredientIds) {
+        if (!submittedIngredientIds.includes(id)) {
+          // Ingredient removed, perform delete
+          await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", id).del();
+          await trx("ingredients").where("ingredient_id", id).del();
+        }
+      }
+    }
+
+    await trx.commit();
+  });
 
     res.redirect("/userLanding/" + user_id); // Redirect after successful update
   } catch (error) {
