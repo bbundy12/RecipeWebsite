@@ -32,6 +32,9 @@
   <form action="/updateRecipe/" method="post">
     <h2>Edit Recipe</h2>
 
+    <% if(recipe.recipe_id) { %>
+      <input type="hidden" name="recipe_id" value="<%= recipe.recipe_id %>">
+    <% } %>
     <!-- Recipe Title -->
     <p>Recipe Title</p>
     <input id="recipe_title" type="text" name="recipe_title" value="<%= recipe.title %>" required />

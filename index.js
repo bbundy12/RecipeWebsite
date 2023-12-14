@@ -366,11 +366,13 @@ app.post("/updateRecipe", async (req, res) => {
     const title = req.body.recipe_title;
     const servings = req.body.servings;
     const description = req.body.description;
+    const recipe_id = req.body.recipe_id;
 
     console.log(title, servings, description);
+    console.log(recipe_id);
 
-    const recipeResult = await knex("recipes").select("recipe_id").where("title", title).first();
-    const recipe_id = recipeResult.recipe_id;
+    // const recipeResult = await knex("recipes").select("recipe_id").where("title", title).first();
+    // const recipe_id = recipeResult.recipe_id;
 
     console.log(recipe_id);
 
