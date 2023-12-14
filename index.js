@@ -187,7 +187,7 @@ app.get("/shoppingList/:user_id", async (req, res) => {
     const user_id = req.params.user_id;
     const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
     console.log(recipes);
-    res.render("userLanding", { recipes, user_id });
+    res.render("shoppingList", { recipes, user_id });
   } catch (error) {
     console.error("Error fetching recipes:", error);
     res.status(500).send("Internal Server Error");
@@ -200,7 +200,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
     // Extract selected recipe names from the request
     const recipes = req.body.recipes;
 
-    console.log("Recipes", recipes)
+    console.log("Recipes", recipes);
     // Query to get ingredients
     const ingredientsQuery = await knex
       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
@@ -209,7 +209,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
       .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
       .whereIn("recipes.title", recipes);
 
-      console.log("Ingredients: ", ingredientsQuery)
+    console.log("Ingredients: ", ingredientsQuery);
     // Array to hold aggregated ingredients
     let aggregatedIngredients = [];
 
