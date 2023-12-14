@@ -198,16 +198,16 @@ app.get("/shoppingList/:user_id", async (req, res) => {
 app.post("/aggregate_ingredients", async (req, res) => {
   try {
     // Extract selected recipe names from the request
-    const recipes = req.body.recipes;
+    const recipes = req.body.recipe;
 
-    console.log("Recipes", recipes);
+    console.log("Recipes", recipe);
     // Query to get ingredients
     const ingredientsQuery = await knex
       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
       .from("recipes")
       .join("recipe_ingredients", "recipes.recipe_id", "=", "recipe_ingredients.recipe_id")
       .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
-      .whereIn("recipes.title", recipes);
+      .whereIn("recipes.title", recipe);
 
     console.log("Ingredients: ", ingredientsQuery);
     // Array to hold aggregated ingredients
