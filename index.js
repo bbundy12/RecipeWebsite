@@ -393,8 +393,18 @@ app.post("/updateRecipe", async (req, res) => {
         recipe_instructions: recipe_instructions,
       });
 
-      // Update each ingredient
+      // Create array with submitted ingredients
       const submittedIngredientIds = [];
+      ingredients.forEach(ingredient => {
+        if (ingredient.ingredient_id) {
+          submittedIngredientIds.push(ingredient.ingredient_id);
+        }
+      });
+
+      console.log("Submitted IDs: ", submittedIngredientIds);
+
+      // Update each ingredient
+    
       for (const ingredient of ingredients) {
         if (ingredient.ingredient_id) {
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredient.ingredient_id).update({
@@ -405,10 +415,8 @@ app.post("/updateRecipe", async (req, res) => {
           await trx("ingredients").where("ingredient_id", ingredient.ingredient_id).update({
             name: ingredient.name
           });
-
-          // Create an array of the ingredients submitted
-          submittedIngredientIds.push(ingredient.ingredient_id);
-        } else {
+        } 
+        else {
 
           // Add new ingredient
           const newIngredientResult = await trx("ingredients").insert({ name: ingredient.name }).returning("ingredient_id");
@@ -430,7 +438,7 @@ app.post("/updateRecipe", async (req, res) => {
       }
 
       console.log("Original IDs: ", originalIngredientIds);
-      console.log("Submitted IDs: ", submittedIngredientIds);
+     
 
       // Delete removed ingredients
       for (const id of originalIngredientIds) {
