@@ -198,7 +198,7 @@ app.get("/shoppingList/:user_id", async (req, res) => {
 app.post("/aggregate_ingredients", async (req, res) => {
   try {
     // Extract selected recipe names from the request
-    const title = req.body.selected-recipes;
+    const title = req.body.recipe_title;
     
 
     console.log("Recipes", title);
