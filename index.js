@@ -263,7 +263,6 @@ app.post("/storeRecipe", async (req, res) => {
     await file.mv(imgPath,(err) => {
       if (err)
         return res.status(500).send(err);
-      res.send('File uploaded!');
    }); 
 
     const { recipe_title, servings, recipe_instructions } = req.body;
