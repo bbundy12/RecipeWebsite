@@ -10,19 +10,9 @@ let app = express();
 
 let path = require("path");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 const puppeteer = require("puppeteer");
-
-const fileUpload = require("express-fileupload");
-app.use(
-  fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-  })
-);
-
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -31,11 +21,11 @@ app.use(express.static("public"));
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: process.env.RDS_HOSTNAME || "localhost",
-    user: process.env.RDS_USERNAME || "postgres",
-    password: process.env.RDS_PASSWORD || "password",
-    database: process.env.RDS_DB_NAME || "ebdb",
-    port: process.env.RDS_PORT || 5432,
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    database: process.env.RDS_DB_NAME,
+    port: process.env.RDS_PORT,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
