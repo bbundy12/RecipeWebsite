@@ -15,7 +15,7 @@ nav {
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
 }
 
-nav a {
+nav div form button {
   color: white;
   background-color: var(--secondary-dark);
   border: 2px solid white;
@@ -29,7 +29,7 @@ nav a {
   border-radius: 5px;
 }
 
-nav a:hover {
+nav div form button {
   color: var(--secondary-dark);
   background-color: white;
   border: 2px transparent solid;
