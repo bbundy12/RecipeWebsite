@@ -400,6 +400,9 @@ app.get("/deleteRecipe/:recipe_id", async (req, res) => {
   try {
     const recipe_id = req.params.recipe_id;
 
+    const useridprom = await knex("recipes").where("recipe_id", recipe_id).select('user_id');
+    const user_id = useridprom[0].user_id;
+
     // Begin a transaction for data consistency
     await knex.transaction(async (trx) => {
       // First, select ingredient IDs associated with the recipe
@@ -419,7 +422,7 @@ app.get("/deleteRecipe/:recipe_id", async (req, res) => {
       await trx("recipes").where("recipe_id", recipe_id).del();
     });
 
-    res.status(200).send("Recipe and its ingredients successfully deleted");
+    res.redirect("/userLanding/" + user_id); // Redirect after successful update
   } catch (error) {
     console.error("Error deleting recipe:", error);
     res.status(500).send("Internal Server Error");
