@@ -29,8 +29,14 @@
     <nav>
       <a href="/userLanding">Back to Recipes</a>
       <div>
-        <a href="/editRecipe">Edit Recipe</a>
-        <a href="/deleteRecipe">Delete Recipe</a>
+        <!-- <a href="/editRecipe">Edit Recipe</a>
+        <a href="/deleteRecipe">Delete Recipe</a> -->
+        <form action="/editRecipe" method="get">
+          <button type="submit">Edit Recipe</button>
+        </form>
+        <form action="/deleteRecipe" method="get">
+          <button type="submit">Delete Recipe</button>
+        </form>
       </div>
     </nav>
 
