@@ -360,7 +360,7 @@ app.get("/editRecipe/:title", async (req, res) => {
       .where("recipe_ingredients.recipe_id", recipe_id);
 
     // Render the view with the fetched data
-    res.render("updateRecipe", { recipe, ingredients });
+    res.render("editRecipe", { recipe, ingredients });
   } catch (error) {
     console.error("Error fetching recipe:", error);
     res.status(500).send("Internal Server Error");
