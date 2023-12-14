@@ -155,7 +155,7 @@ app.get("/recipeSubmitted/:user_id", (req, res) => {
 app.get("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
-    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
+    const recipes = await knex("recipes").where("user_id", user_id).select("title", "recipe_id");
     console.log(recipes);
     res.render("userLanding", { recipes, user_id });
   } catch (error) {
@@ -505,10 +505,8 @@ app.get("/deleteRecipe/:recipe_id", async (req, res) => {
       // Delete related data from recipe_ingredients junction table
       await trx("recipe_ingredients").where("recipe_id", recipe_id).del();
 
-      // If safe, delete ingredients from the ingredients table
-      for (const ingredient of ingredientIds) {
-        await trx("ingredients").where("ingredient_id", ingredient.ingredient_id).del();
-      }
+      //Don't need to delete ingredients from ingredients table because we don't want to delete ingredients
+      //Used in other recipes
 
       // Finally, delete the recipe
       await trx("recipes").where("recipe_id", recipe_id).del();
