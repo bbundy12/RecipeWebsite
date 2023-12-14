@@ -21,9 +21,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -104,7 +102,13 @@
                                       <label for="oz-<%= index %>">oz</label>
 
                                       <input id="lb-<%= index %>" value="lb" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='lb' ) { %> checked <% } %> />
-                                        <label for="lb-<%= index %>" style="border-radius: 0 2px 2px 0;">lb</label>
+                                        <label for="lb-<%= index %>">lb</label>
+
+                                        <input id="half-<%= index %>" value="half" name="measurement_<%= index %>" type="radio" required <% if(ingredient.unit==='half' ) { %> checked <% } %> />
+                                          <label for="half-<%= index %>">half</label>
+
+                                          <input id="whole-<%= index %>" value="whole" name="measurement_<%= index %>" type="radio" required <% if(ingredient.unit==='whole' ) { %> checked <% } %> />
+                                            <label for="whole-<%= index %>" style="border-radius: 0 2px 2px 0;">whole</label>
                           </div>
                           <div class="question-divider"></div>
                     </div>
@@ -155,7 +159,11 @@
         <input id="oz-${uniqueCounter}" value="oz" name="measurement-${uniqueCounter}" type="radio" required />
         <label for="oz-${uniqueCounter}">oz</label>
         <input id="lb-${uniqueCounter}" value="lb" name="measurement-${uniqueCounter}" type="radio" required />
-        <label for="lb-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">lb</label>
+        <label for="lb-${uniqueCounter}">lb</label>
+        <input id="half-${uniqueCounter}" value="half" name="measurement_${uniqueCounter}" type="radio" required />
+        <label for="half-${uniqueCounter}">half</label>
+        <input id="whole-${uniqueCounter}" value="whole" name="measurement_${uniqueCounter}" type="radio" required />
+        <label for="whole-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">whole</label>
     </div>
     <div class="question-divider"></div>
     `;
