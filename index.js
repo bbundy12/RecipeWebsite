@@ -150,9 +150,9 @@ app.get("/recipeSubmitted/:user_id", (req, res) => {
 app.get("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
-    const recipes = await knex("recipes").where("user_id", user_id).select("title");
+    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image");
 
-    res.render("userLanding", { recipes, user_id });
+    res.render("userLanding", { recipes, user_id , image});
   } catch (error) {
     console.error("Error fetching recipes:", error);
     res.status(500).send("Internal Server Error");
