@@ -429,9 +429,13 @@ app.post("/updateRecipe", async (req, res) => {
         originalIngredientIds = [originalIngredientIds]; // Ensure it's an array
       }
 
+      console.log("Original IDs: ", originalIngredientIds);
+      console.log("Submitted IDs: ", submittedIngredientIds);
+
       // Delete removed ingredients
       for (const id of originalIngredientIds) {
         if (!submittedIngredientIds.includes(id)) {
+          console.log("Deleting ingredient ID: ", id);
           // Ingredient removed, perform delete
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", id).del();
           await trx("ingredients").where("ingredient_id", id).del();
