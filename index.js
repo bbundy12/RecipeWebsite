@@ -390,7 +390,7 @@ app.post("/updateRecipe", async (req, res) => {
     });
 
 
-    es.redirect("/userLanding/" + user_id); // Redirect after successful update
+    res.redirect("/userLanding/" + user_id); // Redirect after successful update
   } catch (error) {
     console.error("Error updating recipe:", error);
     res.status(500).send("Internal Server Error");
