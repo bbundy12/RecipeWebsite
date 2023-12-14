@@ -221,25 +221,17 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
     console.log("Aggregated Ingredients:", aggregatedIngredients);
 
-    // Create an HTML template for the PDF
-    let htmlContent = `<html><head><link rel="stylesheet" href="/pdf.css"></head><body>`;
-    htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
-    aggregatedIngredients.forEach((ingredient) => {
-      htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
-    });
-    htmlContent += `</ul></body></html>`;
+    res.render("viewShoppingList", { aggregatedIngredients });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-    // Launch Puppeteer and create a PDF
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(htmlContent);
-    const pdf = await page.pdf({ format: "A4" });
+app.get("/shoppingList", async (req, res) => {
+  try {
+  console.log(aggregatedIngredients);
 
-    // Send the PDF as a response
-    res.contentType("application/pdf");
-    res.send(pdf);
-
-    await browser.close();
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Internal Server Error");
