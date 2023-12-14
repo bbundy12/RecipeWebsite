@@ -349,7 +349,7 @@ app.get("/editRecipe/:title", async (req, res) => {
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
       .join("recipe_ingredients", "ingredients.ingredient_id", "recipe_ingredients.ingredient_id")
-      .select("ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
+      .select("ingredients.ingredient_id", "ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
       .where("recipe_ingredients.recipe_id", recipe_id);
 
     // Render the view with the fetched data
@@ -388,7 +388,8 @@ app.post("/updateRecipe", async (req, res) => {
         ingredients.push({
           name: req.body[`ingredient-name-${index}`],
           quantity: req.body[`quantity-${index}`],
-          unit: req.body[`measurement-${index}`]
+          unit: req.body[`measurement-${index}`],
+          ingredient_id: req.body[`ingredient-id-${index}`]
         });
       }
     });
@@ -406,9 +407,9 @@ app.post("/updateRecipe", async (req, res) => {
 
       // Update each ingredient
       for (const ingredient of ingredients) {
-        const ingredientRecord = await trx("ingredients").select('user_id').where("name", ingredient.name).first();
+        // const ingredientRecord = await trx("ingredients").select('user_id').where("name", ingredient.name).first();
         if (ingredientRecord) {
-          await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredientRecord.ingredient_id).update({
+          await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredient.ingredient_id).update({
             quantity: ingredient.quantity,
             unit: ingredient.unit,
           });

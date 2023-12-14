@@ -34,94 +34,98 @@
 
     <% if(recipe.recipe_id) { %>
       <input type="hidden" name="recipe_id" value="<%= recipe.recipe_id %>">
-    <% } %>
-    <!-- Recipe Title -->
-    <p>Recipe Title</p>
-    <input id="recipe_title" type="text" name="recipe_title" value="<%= recipe.title %>" required />
+      <% } %>
+        <!-- Recipe Title -->
+        <p>Recipe Title</p>
+        <input id="recipe_title" type="text" name="recipe_title" value="<%= recipe.title %>" required />
 
-    <!-- Servings -->
-    <p>Servings</p>
-    <div class="radioSelector">
-      <input id="1-serving" value="1" name="servings" type="radio" required <% if(recipe.servings==="1" ) { %>checked<% } %> />
-        <label for="1-serving" style="border-radius: 2px 0 0 2px;">1</label>
-        <input id="2-4-serving" value="2-4" name="servings" type="radio" required <% if(recipe.servings==="2-4" ) { %>checked<% } %> />
-          <label for="2-4-serving">2-4</label>
-          <input id="4-6-serving" value="4-6" name="servings" type="radio" required <% if(recipe.servings==="4-6" ) { %>checked<% } %> />
-            <label for="4-6-serving">4-6</label>
-            <input id="6-8-serving" value="6-8" name="servings" type="radio" required <% if(recipe.servings==="6-8" ) { %>checked<% } %> />
-              <label for="6-8-serving">6-8</label>
-              <input id="10-serving" value="10+" name="servings" type="radio" required <% if(recipe.servings==="10+" ) { %>checked<% } %> />
-                <label for="10-serving" style="border-radius: 0 2px 2px 0;">10+</label>
-    </div>
-
-    <!-- Ingredients Section -->
-    <div id="ingredients-container">
-      <% ingredients.forEach((ingredient, index)=> { %>
-        <div id="ingredient-<%= index %>">
-          <div class="ingredient-title-container">
-            <div>
-              <!-- Ingredient Name -->
-              <p>Ingredient Name</p>
-              <input type="text" name="ingredient-name-<%= index %>" value="<%= ingredient.name %>" required>
-            </div>
-            <div>
-              <!-- Quantity -->
-              <p>Quantity</p>
-              <input type="number" name="quantity-<%= index %>" value="<%= ingredient.quantity %>" required>
-            </div>
-            <button type="button" onclick="removeIngredient('ingredient-<%= index %>')">Remove<br>Ingredient</button>
-          </div>
-
-          <!-- Measurement -->
-          <p>Measurement</p>
-          <div class="radioSelector">
-            <input id="pinch-<%= index %>" value="pinch" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='pinch' ) { %> checked <% } %> />
-              <label for="pinch-<%= index %>" style="border-radius: 2px 0 0 2px;">pinch</label>
-
-              <input id="tsp-<%= index %>" value="tsp" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='tsp' ) { %> checked <% } %> />
-                <label for="tsp-<%= index %>">tsp</label>
-
-                <input id="tbsp-<%= index %>" value="tbsp" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='tbsp' ) { %> checked <% } %> />
-                  <label for="tbsp-<%= index %>">tbsp</label>
-
-                  <input id="cup-<%= index %>" value="cup" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='cup' ) { %> checked <% } %> />
-                    <label for="cup-<%= index %>">cup</label>
-
-                    <input id="oz-<%= index %>" value="oz" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='oz' ) { %> checked <% } %> />
-                      <label for="oz-<%= index %>">oz</label>
-
-                      <input id="lb-<%= index %>" value="lb" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='lb' ) { %> checked <% } %> />
-                        <label for="lb-<%= index %>" style="border-radius: 0 2px 2px 0;">lb</label>
-          </div>
-          <div class="question-divider"></div>
+        <!-- Servings -->
+        <p>Servings</p>
+        <div class="radioSelector">
+          <input id="1-serving" value="1" name="servings" type="radio" required <% if(recipe.servings==="1" ) { %>checked<% } %> />
+            <label for="1-serving" style="border-radius: 2px 0 0 2px;">1</label>
+            <input id="2-4-serving" value="2-4" name="servings" type="radio" required <% if(recipe.servings==="2-4" ) { %>checked<% } %> />
+              <label for="2-4-serving">2-4</label>
+              <input id="4-6-serving" value="4-6" name="servings" type="radio" required <% if(recipe.servings==="4-6" ) { %>checked<% } %> />
+                <label for="4-6-serving">4-6</label>
+                <input id="6-8-serving" value="6-8" name="servings" type="radio" required <% if(recipe.servings==="6-8" ) { %>checked<% } %> />
+                  <label for="6-8-serving">6-8</label>
+                  <input id="10-serving" value="10+" name="servings" type="radio" required <% if(recipe.servings==="10+" ) { %>checked<% } %> />
+                    <label for="10-serving" style="border-radius: 0 2px 2px 0;">10+</label>
         </div>
-        <% }); %>
-    </div>
 
-    <!-- Ingredients
+        <!-- Ingredients Section -->
+        <div id="ingredients-container">
+          <% ingredients.forEach((ingredient, index)=> { %>
+            <div id="ingredient-<%= index %>">
+              <!-- Hidden field for ingredient ID (if available) -->
+              <% if(ingredient.ingredient_id) { %>
+                <input type="hidden" name="ingredient-id-<%= index %>" value="<%= ingredient.ingredient_id %>">
+                <% } %>
+                  <div class="ingredient-title-container">
+                    <div>
+                      <!-- Ingredient Name -->
+                      <p>Ingredient Name</p>
+                      <input type="text" name="ingredient-name-<%= index %>" value="<%= ingredient.name %>" required>
+                    </div>
+                    <div>
+                      <!-- Quantity -->
+                      <p>Quantity</p>
+                      <input type="number" name="quantity-<%= index %>" value="<%= ingredient.quantity %>" required>
+                    </div>
+                    <button type="button" onclick="removeIngredient('ingredient-<%= index %>')">Remove<br>Ingredient</button>
+                  </div>
+
+                  <!-- Measurement -->
+                  <p>Measurement</p>
+                  <div class="radioSelector">
+                    <input id="pinch-<%= index %>" value="pinch" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='pinch' ) { %> checked <% } %> />
+                      <label for="pinch-<%= index %>" style="border-radius: 2px 0 0 2px;">pinch</label>
+
+                      <input id="tsp-<%= index %>" value="tsp" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='tsp' ) { %> checked <% } %> />
+                        <label for="tsp-<%= index %>">tsp</label>
+
+                        <input id="tbsp-<%= index %>" value="tbsp" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='tbsp' ) { %> checked <% } %> />
+                          <label for="tbsp-<%= index %>">tbsp</label>
+
+                          <input id="cup-<%= index %>" value="cup" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='cup' ) { %> checked <% } %> />
+                            <label for="cup-<%= index %>">cup</label>
+
+                            <input id="oz-<%= index %>" value="oz" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='oz' ) { %> checked <% } %> />
+                              <label for="oz-<%= index %>">oz</label>
+
+                              <input id="lb-<%= index %>" value="lb" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='lb' ) { %> checked <% } %> />
+                                <label for="lb-<%= index %>" style="border-radius: 0 2px 2px 0;">lb</label>
+                  </div>
+                  <div class="question-divider"></div>
+            </div>
+            <% }); %>
+        </div>
+
+        <!-- Ingredients
           <p>Ingredients</p>
           <div class="question-divider"></div>
           <div id="ingredients-container">
 
             <! Ingredient Item -->
-    <!-- <div id="ingredient-0">
+        <!-- <div id="ingredient-0">
               <div class="ingredient-title-container">
                 <div> -->
 
-    <!-- Ingredient Name -->
-    <!-- <p>Ingredient Name</p>
+        <!-- Ingredient Name -->
+        <!-- <p>Ingredient Name</p>
                   <input type="text" name="ingredient-name-0" required>
                 </div>
                 <div> -->
 
-    <!-- Quantity -->
-    <!-- <p>Quantity</p>
+        <!-- Quantity -->
+        <!-- <p>Quantity</p>
                   <input type="number" name="quantity-0" required>
                 </div>
               </div> -->
 
-    <!-- Measurement -->
-    <!-- <p>Measurement</p>
+        <!-- Measurement -->
+        <!-- <p>Measurement</p>
               <div class="radioSelector">
                 <input id="pinch-0" value="pinch" name="measurement-0" type="radio" required />
                 <label for="pinch-0" style="border-radius: 2px 0 0 2px;">pinch</label>
@@ -140,14 +144,14 @@
             </div>
           </div> -->
 
-    <!-- Add Ingredient -->
-    <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
+        <!-- Add Ingredient -->
+        <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
 
-    <!-- Recipe Instructions -->
-    <textarea id="recipe_instructions" name="recipe_instructions" rows="5" required><%= recipe.recipe_instructions %></textarea>
+        <!-- Recipe Instructions -->
+        <textarea id="recipe_instructions" name="recipe_instructions" rows="5" required><%= recipe.recipe_instructions %></textarea>
 
-    <!-- Create Recipe -->
-    <button type="submit">Update Recipe</button>
+        <!-- Create Recipe -->
+        <button type="submit">Update Recipe</button>
   </form>
 
   <!-- JS -->
