@@ -362,7 +362,12 @@ app.get("/editRecipe/:title", async (req, res) => {
 
 app.post("/updateRecipe", async (req, res) => {
   try {
-    const { title, servings, description, ingredients } = req.body;
+   
+    const title = req.body.recipe_title;
+    const servings = req.body.servings;
+    const description = req.body.description;
+    const ingredients = req.body.ingredients;
+    
     console.log(req.body);
     console.log(servings);
     console.log(title);
