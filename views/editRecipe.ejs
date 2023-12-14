@@ -43,7 +43,7 @@
             <input type="hidden" name="original-ingredient-ids" value="<%= ingredient.ingredient_id %>">
             <% } %>
               <% }); %>
-              
+
                 <!-- Recipe Title -->
                 <p>Recipe Title</p>
                 <input id="recipe_title" type="text" name="recipe_title" value="<%= recipe.title %>" required />
@@ -111,48 +111,6 @@
                     <% }); %>
                 </div>
 
-                <!-- Ingredients
-          <p>Ingredients</p>
-          <div class="question-divider"></div>
-          <div id="ingredients-container">
-
-            <! Ingredient Item -->
-                <!-- <div id="ingredient-0">
-              <div class="ingredient-title-container">
-                <div> -->
-
-                <!-- Ingredient Name -->
-                <!-- <p>Ingredient Name</p>
-                  <input type="text" name="ingredient-name-0" required>
-                </div>
-                <div> -->
-
-                <!-- Quantity -->
-                <!-- <p>Quantity</p>
-                  <input type="number" name="quantity-0" required>
-                </div>
-              </div> -->
-
-                <!-- Measurement -->
-                <!-- <p>Measurement</p>
-              <div class="radioSelector">
-                <input id="pinch-0" value="pinch" name="measurement-0" type="radio" required />
-                <label for="pinch-0" style="border-radius: 2px 0 0 2px;">pinch</label>
-                <input id="tsp-0" value="tsp" name="measurement-0" type="radio" required />
-                <label for="tsp-0">tsp</label>
-                <input id="tbsp-0" value="tbsp" name="measurement-0" type="radio" required />
-                <label for="tbsp-0">tbsp</label>
-                <input id="cup-0" value="cup" name="measurement-0" type="radio" required />
-                <label for="cup-0">cup</label>
-                <input id="oz-0" value="oz" name="measurement-0" type="radio" required />
-                <label for="oz-0">oz</label>
-                <input id="lb-0" value="lb" name="measurement-0" type="radio" required />
-                <label for="lb-0" style="border-radius: 0 2px 2px 0;">lb</label>
-              </div>
-              <div class="question-divider"></div>
-            </div>
-          </div> -->
-
                 <!-- Add Ingredient -->
                 <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
 
@@ -186,10 +144,20 @@
       </div>
       <p>Measurement</p>
       <div class="radioSelector">
-        <!-- Add radio buttons for measurements -->
-        <!-- Ensure each id and for attribute is unique -->
-      </div>
-      <div class="question-divider"></div>
+        <input id="pinch-${uniqueCounter}" value="pinch" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="pinch-${uniqueCounter}" style="border-radius: 2px 0 0 2px;">pinch</label>
+        <input id="tsp-${uniqueCounter}" value="tsp" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="tsp-${uniqueCounter}">tsp</label>
+        <input id="tbsp-${uniqueCounter}" value="tbsp" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="tbsp-${uniqueCounter}">tbsp</label>
+        <input id="cup-${uniqueCounter}" value="cup" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="cup-${uniqueCounter}">cup</label>
+        <input id="oz-${uniqueCounter}" value="oz" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="oz-${uniqueCounter}">oz</label>
+        <input id="lb-${uniqueCounter}" value="lb" name="measurement-${uniqueCounter}" type="radio" required />
+        <label for="lb-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">lb</label>
+    </div>
+    <div class="question-divider"></div>
     `;
       container.appendChild(ingredientDiv);
       uniqueCounter++;
