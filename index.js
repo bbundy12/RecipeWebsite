@@ -413,4 +413,35 @@ app.post("/updateRecipe", async (req, res) => {
   }
 });
 
+app.delete("/deleteRecipe/:recipe_id", async (req, res) => {
+  try {
+    const recipe_id = req.params.recipe_id;
+
+    // Begin a transaction for data consistency
+    await knex.transaction(async (trx) => {
+      // First, select ingredient IDs associated with the recipe
+      const ingredientIds = await trx("recipe_ingredients")
+                                 .where("recipe_id", recipe_id)
+                                 .select("ingredient_id");
+
+      // Delete related data from recipe_ingredients junction table
+      await trx("recipe_ingredients").where("recipe_id", recipe_id).del();
+
+      // If safe, delete ingredients from the ingredients table
+      for (const ingredient of ingredientIds) {
+        await trx("ingredients").where("ingredient_id", ingredient.ingredient_id).del();
+      }
+
+      // Finally, delete the recipe
+      await trx("recipes").where("recipe_id", recipe_id).del();
+    });
+
+    res.status(200).send("Recipe and its ingredients successfully deleted");
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 app.listen(port, () => console.log("Express App has started and server is listening!"));
