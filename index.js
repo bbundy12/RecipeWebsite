@@ -364,7 +364,7 @@ app.post("/updateRecipe", async (req, res) => {
   try {
     const { user_id, title, servings, description, ingredients } = req.body;
 
-    const recipeResult = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
+    const recipeResult = await knex("recipes").select("recipe_id").where("title", req.body.title).first();
     const recipe_id = recipeResult.recipe_id;
 
     // Begin a transaction
@@ -386,7 +386,9 @@ app.post("/updateRecipe", async (req, res) => {
           });
         }
       }
+      await trx.commit();
     });
+
 
     res.redirect("/userLanding/:user_id"); // Redirect after successful update
   } catch (error) {
