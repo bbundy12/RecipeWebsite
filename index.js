@@ -372,7 +372,9 @@ app.get("/editRecipe/:title", async (req, res) => {
 
 app.post("/updateRecipe", async (req, res) => {
   try {
-    const { recipe_id, user_id, title, servings, description, ingredients } = req.body;
+    const { user_id, title, servings, description, ingredients } = req.body;
+
+    const recipe_id = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
 
     // Begin a transaction
     await knex.transaction(async (trx) => {
