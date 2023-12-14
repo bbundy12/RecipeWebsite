@@ -399,7 +399,7 @@ app.post("/updateRecipe", async (req, res) => {
 
 app.get("/deleteRecipe/:recipe_id", async (req, res) => {
   try {
-    const title = req.params.recipe_id;
+    const recipe_id = req.params.recipe_id;
 
     // Begin a transaction for data consistency
     await knex.transaction(async (trx) => {
