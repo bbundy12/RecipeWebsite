@@ -167,7 +167,7 @@ app.get("/recipeView/:recipe_id", async (req, res) => {
     const ingredients = await knex("ingredients")
       .join("recipe_ingredients", "ingredients.ingredient_id", "recipe_ingredients.ingredient_id")
       .select("ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
-      .where("recipe_ingredients.recipe_id", recipe_id);
+      .where("recipe_ingredients.recipe_id", req.params.recipe_id);
 
     // Render the view with the fetched data
     res.render("recipeView", { recipe, ingredients });
