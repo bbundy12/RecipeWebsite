@@ -15,7 +15,9 @@ const port = process.env.PORT || 3000;
 const puppeteer = require("puppeteer");
 
 const fileUpload = require('express-fileupload');
-app.use(fileUpload());
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+}));
 
 // const multer = require("multer");
 // const storage = multer.diskStorage({
