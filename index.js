@@ -365,6 +365,8 @@ app.post("/updateRecipe", async (req, res) => {
     const { title, servings, description, ingredients } = req.body;
     console.log(req.body);
     console.log(servings);
+    console.log(title);
+    console.log(req.body.title);
 
     const recipeResult = await knex("recipes").select("recipe_id").where("title", title).first();
     const recipe_id = recipeResult.recipe_id;
