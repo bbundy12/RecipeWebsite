@@ -27,8 +27,12 @@
   <div id="body-content">
     <!-- Navbar -->
     <nav>
-      <a href="/editUser">Edit Account Info</a>
-      <a href="/logout">Log Out</a>
+      <form action="/editRecipe/<%= recipes.title %>" method="get">
+        <button type="submit">Edit Recipe</button>
+      </form>
+      <form action="/deleteRecipe/<%= recipes.title %>" method="get">
+        <button type="submit">Delete Recipe</button>
+      </form>
     </nav>
 
     <header>

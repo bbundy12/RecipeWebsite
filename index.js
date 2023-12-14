@@ -338,29 +338,28 @@ app.get("/createRecipe", (req, res) => {
   res.render("createRecipe");
 });
 
-app.get("/editRecipe", async (req, res) => {
+app.get("/editRecipe/:title", async (req, res) => {
   try {
     const { recipeTitle, username } = req.query;
 
-    // Fetch user details (to ensure correct user and get user_id)
-    const user = await knex("Users").where("username", username).first();
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    // Fetch recipe details linked to the user
-    const recipe = await knex("Recipes").where("title", recipeTitle).andWhere("user_id", user.user_id).first();
-
-    if (!recipe) {
+    const recipeResult = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
+    
+    console.log(recipeResult);
+    
+    if (!recipeResult) {
       return res.status(404).send("Recipe not found");
     }
+     
+     const recipe_id = recipeResult.recipe_id;
+     console.log(recipe_id);
 
-    // Fetch recipe ingredients
-    const ingredients = await knex("Recipe_Ingredients")
-      .join("Ingredients", "Recipe_Ingredients.ingredient_id", "Ingredients.ingredient_id")
-      .where("recipe_id", recipe.recipe_id)
-      .select("Ingredients.name", "Recipe_Ingredients.quantity", "Recipe_Ingredients.unit");
+    const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
+    const ingredients = await knex("ingredients")
+      .join("recipe_ingredients", "ingredients.ingredient_id", "recipe_ingredients.ingredient_id")
+      .select("ingredients.name", "recipe_ingredients.quantity", "recipe_ingredients.unit")
+      .where("recipe_ingredients.recipe_id", recipe_id);
 
+    // Render the view with the fetched data
     res.render("updateRecipe", { recipe, ingredients });
   } catch (error) {
     console.error("Error fetching recipe:", error);
@@ -375,7 +374,7 @@ app.post("/updateRecipe", async (req, res) => {
     // Begin a transaction
     await knex.transaction(async (trx) => {
       // Update recipe details
-      await trx("Recipes").where("recipe_id", recipe_id).update({
+      await trx("recipes").where("recipe_id", recipe_id).update({
         title,
         servings,
         image,
@@ -384,9 +383,9 @@ app.post("/updateRecipe", async (req, res) => {
 
       // Update each ingredient
       for (const ingredient of ingredients) {
-        const ingredientRecord = await trx("Ingredients").where("name", ingredient.name).first();
+        const ingredientRecord = await trx("ingredients").where("name", ingredient.name).first();
         if (ingredientRecord) {
-          await trx("Recipe_Ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredientRecord.ingredient_id).update({
+          await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredientRecord.ingredient_id).update({
             quantity: ingredient.quantity,
             unit: ingredient.unit,
           });
