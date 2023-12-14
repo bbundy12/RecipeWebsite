@@ -248,34 +248,6 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
 app.post("/storeRecipe", async (req, res) => {
   try {
-    const file = req.files.recipe_image;
-    const uploadParams = {
-      Bucket: "recipewebsiteis403",
-      Key: file.name,
-      Body: file.data,
-    };
-
-    // Promisify the s3 upload
-    const uploadToS3 = () => {
-      return new Promise((resolve, reject) => {
-        s3.upload(uploadParams, function (err, data) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(data.Location);
-        });
-      });
-    };
-
-    // Save the URL or the key in your database
-    const imageUrl = await uploadToS3();
-    console.log(`File uploaded successfully. ${imageUrl}`);
-
-    //   const imgPath = __dirname + "/public/img/" + file.name
-    //   await file.mv(imgPath,(err) => {
-    //     if (err)
-    //       return res.status(500).send(err);
-    //  });
 
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
