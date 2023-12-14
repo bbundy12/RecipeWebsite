@@ -10,24 +10,23 @@ let app = express();
 
 let path = require("path");
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 const puppeteer = require("puppeteer");
 
 const fileUpload = require('express-fileupload');
-
 app.use(fileUpload());
 
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage: storage });
+// const multer = require("multer");
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+//   },
+// });
+// const upload = multer({ storage: storage });
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -36,11 +35,11 @@ app.use(express.static("public"));
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: process.env.RDS_HOSTNAME,
-    user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
-    database: process.env.RDS_DB_NAME,
-    port: process.env.RDS_PORT,
+    host: process.env.RDS_HOSTNAME || "localhost",
+    user: process.env.RDS_USERNAME || "postgres",
+    password: process.env.RDS_PASSWORD || "password",
+    database: process.env.RDS_DB_NAME || "ebdb",
+    port: process.env.RDS_PORT || 5432,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
@@ -258,8 +257,9 @@ app.get("/recipeView/:title", async (req, res) => {
 
 app.post("/storeRecipe", async (req, res) => {
   try {
+    console.log(req.files)
     const file = req.files.recipe_image
-    const imgPath = __dirname + "/public/img" + file.name
+    const imgPath = __dirname + "/public/img/" + file.name
     await file.mv(imgPath,(err) => {
       if (err)
         return res.status(500).send(err);
