@@ -21,85 +21,105 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
 
   <!-- Create Recipe -->
   <form action="/updateRecipe/" method="get">
-    <h2>Create Recipe</h2>
+    <h2>Edit Recipe</h2>
 
     <!-- Recipe Title -->
     <p>Recipe Title</p>
-    <input id="recipe_title" type="text" name="recipe_title" required />
+    <input id="recipe_title" type="text" name="recipe_title" value="<%= recipe.title %>" required />
 
     <!-- Servings -->
     <p>Servings</p>
     <div class="radioSelector">
-      <input id="1-serving" value="1" name="servings" type="radio" required />
-      <label for="1-serving" style="border-radius: 2px 0 0 2px;">1</label>
-      <input id="2-4-serving" value="2-4" name="servings" type="radio" required />
-      <label for="2-4-serving">2-4</label>
-      <input id="4-6-serving" value="4-6" name="servings" type="radio" required />
-      <label for="4-6-serving">4-6</label>
-      <input id="6-8-serving" value="6-8" name="servings" type="radio" required />
-      <label for="6-8-serving">6-8</label>
-      <input id="10-serving" value="10+" name="servings" type="radio" required />
-      <label for="10-serving" style="border-radius: 0 2px 2px 0;">10+</label>
+      <input id="1-serving" value="1" name="servings" type="radio" required <% if(recipe.servings==="1" ) { %>checked<% } %> />
+        <label for="1-serving" style="border-radius: 2px 0 0 2px;">1</label>
+        <input id="2-4-serving" value="2-4" name="servings" type="radio" required <% if(recipe.servings==="2-4" ) { %>checked<% } %> />
+          <label for="2-4-serving">2-4</label>
+          <input id="4-6-serving" value="4-6" name="servings" type="radio" required <% if(recipe.servings==="4-6" ) { %>checked<% } %> />
+            <label for="4-6-serving">4-6</label>
+            <input id="6-8-serving" value="6-8" name="servings" type="radio" required <% if(recipe.servings==="6-8" ) { %>checked<% } %> />
+              <label for="6-8-serving">6-8</label>
+              <input id="10-serving" value="10+" name="servings" type="radio" required <% if(recipe.servings==="10+" ) { %>checked<% } %> />
+                <label for="10-serving" style="border-radius: 0 2px 2px 0;">10+</label>
     </div>
 
-    <!-- Ingredients -->
-    <p>Ingredients</p>
-    <div class="question-divider"></div>
+    <!-- Ingredients Section -->
     <div id="ingredients-container">
-
-      <!-- Ingredient Item -->
-      <div id="ingredient-0">
-        <div class="ingredient-title-container">
-          <div>
-
-            <!-- Ingredient Name -->
-            <p>Ingredient Name</p>
-            <input type="text" name="ingredient-name-0" required>
+      <% ingredients.forEach((ingredient, index)=> { %>
+        <div id="ingredient-<%= index %>">
+          <div class="ingredient-title-container">
+            <div>
+              <!-- Ingredient Name -->
+              <p>Ingredient Name</p>
+              <input type="text" name="ingredient-name-<%= index %>" value="<%= ingredient.name %>" required>
+            </div>
+            <div>
+              <!-- Quantity -->
+              <p>Quantity</p>
+              <input type="number" name="quantity-<%= index %>" value="<%= ingredient.quantity %>" required>
+            </div>
+            <button type="button" onclick="removeIngredient('ingredient-<%= index %>')">Remove<br>Ingredient</button>
           </div>
-          <div>
 
-            <!-- Quantity -->
-            <p>Quantity</p>
-            <input type="number" name="quantity-0" required>
+          <!-- Ingredients -->
+          <p>Ingredients</p>
+          <div class="question-divider"></div>
+          <div id="ingredients-container">
+
+            <!-- Ingredient Item -->
+            <div id="ingredient-0">
+              <div class="ingredient-title-container">
+                <div>
+
+                  <!-- Ingredient Name -->
+                  <p>Ingredient Name</p>
+                  <input type="text" name="ingredient-name-0" required>
+                </div>
+                <div>
+
+                  <!-- Quantity -->
+                  <p>Quantity</p>
+                  <input type="number" name="quantity-0" required>
+                </div>
+              </div>
+
+              <!-- Measurement -->
+              <p>Measurement</p>
+              <div class="radioSelector">
+                <input id="pinch-0" value="pinch" name="measurement-0" type="radio" required />
+                <label for="pinch-0" style="border-radius: 2px 0 0 2px;">pinch</label>
+                <input id="tsp-0" value="tsp" name="measurement-0" type="radio" required />
+                <label for="tsp-0">tsp</label>
+                <input id="tbsp-0" value="tbsp" name="measurement-0" type="radio" required />
+                <label for="tbsp-0">tbsp</label>
+                <input id="cup-0" value="cup" name="measurement-0" type="radio" required />
+                <label for="cup-0">cup</label>
+                <input id="oz-0" value="oz" name="measurement-0" type="radio" required />
+                <label for="oz-0">oz</label>
+                <input id="lb-0" value="lb" name="measurement-0" type="radio" required />
+                <label for="lb-0" style="border-radius: 0 2px 2px 0;">lb</label>
+              </div>
+              <div class="question-divider"></div>
+            </div>
           </div>
-        </div>
 
-        <!-- Measurement -->
-        <p>Measurement</p>
-        <div class="radioSelector">
-          <input id="pinch-0" value="pinch" name="measurement-0" type="radio" required />
-          <label for="pinch-0" style="border-radius: 2px 0 0 2px;">pinch</label>
-          <input id="tsp-0" value="tsp" name="measurement-0" type="radio" required />
-          <label for="tsp-0">tsp</label>
-          <input id="tbsp-0" value="tbsp" name="measurement-0" type="radio" required />
-          <label for="tbsp-0">tbsp</label>
-          <input id="cup-0" value="cup" name="measurement-0" type="radio" required />
-          <label for="cup-0">cup</label>
-          <input id="oz-0" value="oz" name="measurement-0" type="radio" required />
-          <label for="oz-0">oz</label>
-          <input id="lb-0" value="lb" name="measurement-0" type="radio" required />
-          <label for="lb-0" style="border-radius: 0 2px 2px 0;">lb</label>
-        </div>
-        <div class="question-divider"></div>
-      </div>
-    </div>
+          <!-- Add Ingredient -->
+          <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
 
-    <!-- Add Ingredient -->
-    <button id="add-ingredient-button" type="button" onclick="addIngredient()">Add Ingredient</button>
+          <!-- Recipe Instructions -->
+          <p>Recipe Instructions</p>
+          <textarea id="recipe_instructions" name="recipe_instructions" rows="5" required></textarea>
 
-    <!-- Recipe Instructions -->
-    <p>Recipe Instructions</p>
-    <textarea id="recipe_instructions" name="recipe_instructions" rows="5" required></textarea>
-
-    <!-- Create Recipe -->
-    <button type="submit">Create Recipe</button>
+          <!-- Create Recipe -->
+          <button type="submit">Create Recipe</button>
   </form>
 
   <!-- JS -->

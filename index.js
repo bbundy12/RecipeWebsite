@@ -14,6 +14,10 @@ const port = process.env.PORT;
 
 const puppeteer = require("puppeteer");
 
+const fileUpload = require('express-fileupload');
+
+app.use(fileUpload());
+
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -252,8 +256,16 @@ app.get("/recipeView/:title", async (req, res) => {
 //   }
 // });
 
-app.post("/storeRecipe", upload.single("recipe_image"), async (req, res) => {
+app.post("/storeRecipe", async (req, res) => {
   try {
+    const file = req.files.recipe_image
+    const imgPath = __dirname + "/public/img" + file.name
+    await file.mv(imgPath,(err) => {
+      if (err)
+        return res.status(500).send(err);
+      res.send('File uploaded!');
+   }); 
+
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
 
@@ -286,6 +298,7 @@ app.post("/storeRecipe", upload.single("recipe_image"), async (req, res) => {
           user_id: user_id,
           servings: req.body.servings,
           recipe_instructions: recipe_instructions,
+          image: imgPath,
         })
         .returning("recipe_id");
 
