@@ -228,7 +228,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
   }
 });
 
-app.get("/shoppingList", async (req, res) => {
+app.get("/viewShoppingList", async (req, res) => {
   try {
   console.log(aggregatedIngredients);
 
