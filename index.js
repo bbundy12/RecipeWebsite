@@ -258,6 +258,8 @@ app.post("/storeRecipe", async (req, res) => {
       }
     });
 
+    console.log('Username', req.body.username);
+
     const queryResult = await knex("users").select("user_id").where("username", req.body.username);
     const user_id = queryResult[0].user_id;
     console.log('User_ID:', user_id);
