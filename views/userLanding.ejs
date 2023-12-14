@@ -42,17 +42,17 @@
     <h3>Select Recipes</h3>
     <div id="recipe-card-container">
       <% recipes.forEach(recipe=> { %>
-        <div class="recipe-card" style="background-image: url('<%= recipes.image %>');">
+        <div class="recipe-card">
           <h4>
-            <%= recipe.title %>
+            <%= recipes.title %>
           </h4>
-          <form action="/recipeView/<%= recipe.recipe_id %>" method="get">
+          <form action="/recipeView/<%= recipes.recipe_id %>" method="get">
             <button type="submit">View Recipe</button>
           </form>
         </div>
         <% }); %>
     </div>
-    <form action="/shoppingList/<%= recipe.recipe_id %>" type="get">
+    <form action="/shoppingList/<%= user_id %>" type="get">
       <button type="submit">Generate Shopping List</button>
     </form>
     <script>
