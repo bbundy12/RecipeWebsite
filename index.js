@@ -188,63 +188,63 @@ app.get("/recipeView/:title", async (req, res) => {
 });
 
 // // POST route to aggregate ingredients for selected recipes
-// app.post("/aggregate_ingredients", async (req, res) => {
-//   try {
-//     // Extract selected recipe names from the request
-//     const recipes = req.body.recipes;
+app.post("/aggregate_ingredients", async (req, res) => {
+   try {
+     // Extract selected recipe names from the request
+     const recipes = req.body.recipes;
 
-//     // Query to get ingredients
-//     const ingredientsQuery = await knex
-//       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
-//       .from("recipes")
-//       .join("recipe_ingredients", "recipes.recipe_id", "recipe_ingredients.recipe_id")
-//       .join("ingredients", "recipe_ingredients.ingredient_id", "ingredients.ingredient_id")
-//       .whereIn("recipes.title", recipes);
+     // Query to get ingredients
+     const ingredientsQuery = await knex
+       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
+       .from("recipes")
+       .join("recipe_ingredients", "recipes.recipe_id", '=', "recipe_ingredients.recipe_id")
+       .join("ingredients", "recipe_ingredients.ingredient_id", '=', "ingredients.ingredient_id")
+       .whereIn("recipes.title", recipes);
 
-//     // Array to hold aggregated ingredients
-//     let aggregatedIngredients = [];
+     // Array to hold aggregated ingredients
+     let aggregatedIngredients = [];
 
-//     // Iterate through query results and aggregate quantities
-//     for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
-//       let bFound = false;
-//       for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
-//         if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
-//           aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
-//           bFound = true;
-//         }
-//       }
-//       if (!bFound) {
-//         aggregatedIngredients.push([ingredientsQuery[iQuery].name, ingredientsQuery[iQuery].quantity, ingredientsQuery[iQuery].unit]);
-//         bFound = true;
-//       }
-//     }
+     // Iterate through query results and aggregate quantities
+     for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
+       let bFound = false;
+       for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
+         if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
+           aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
+           bFound = true;
+         }
+       }
+       if (!bFound) {
+        aggregatedIngredients.push([ingredientsQuery[iQuery].name, ingredientsQuery[iQuery].quantity, ingredientsQuery[iQuery].unit]);
+         bFound = true;
+       }
+     }
 
-//     console.log("Aggregated Ingredients:", aggregatedIngredients);
+     console.log("Aggregated Ingredients:", aggregatedIngredients);
 
-//     // Create an HTML template for the PDF
-//     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
-//     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
-//     aggregatedIngredients.forEach((ingredient) => {
-//       htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
-//     });
-//     htmlContent += `</ul></body></html>`;
+     // Create an HTML template for the PDF
+     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
+     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
+     aggregatedIngredients.forEach((ingredient) => {
+       htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
+     });
+     htmlContent += `</ul></body></html>`;
 
-//     // Launch Puppeteer and create a PDF
-//     const browser = await puppeteer.launch();
-//     const page = await browser.newPage();
-//     await page.setContent(htmlContent);
-//     const pdf = await page.pdf({ format: "A4" });
+     // Launch Puppeteer and create a PDF
+     const browser = await puppeteer.launch();
+     const page = await browser.newPage();
+     await page.setContent(htmlContent);
+     const pdf = await page.pdf({ format: "A4" });
 
-//     // Send the PDF as a response
-//     res.contentType("application/pdf");
-//     res.send(pdf);
+     // Send the PDF as a response
+     res.contentType("application/pdf");
+     res.send(pdf);
 
-//     await browser.close();
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+     await browser.close();
+   } catch (error) {
+     console.error("Error fetching data:", error);
+     res.status(500).send("Internal Server Error");
+   }
+});
 
 app.post("/storeRecipe", async (req, res) => {
   try {
