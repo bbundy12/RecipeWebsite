@@ -144,9 +144,9 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/recipeSubmitted/:user_id", (req, res) => {
-  const user_id = await knex('users').where('user_id',req.params.user_id).select('user_id');
-  res.render("recipeSubmitted", {user_id});
-});
+  const userid = await knex('users').where('user_id',req.params.user_id).select('user_id');
+  res.render("recipeSubmitted", {userid});
+  });
 
 app.get("/userLanding/:user_id", async (req, res) => {
   try {
