@@ -10,19 +10,9 @@ let app = express();
 
 let path = require("path");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 const puppeteer = require("puppeteer");
-
-const fileUpload = require("express-fileupload");
-app.use(
-  fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-  })
-);
-
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -31,11 +21,11 @@ app.use(express.static("public"));
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: process.env.RDS_HOSTNAME || "localhost",
-    user: process.env.RDS_USERNAME || "postgres",
-    password: process.env.RDS_PASSWORD || "password",
-    database: process.env.RDS_DB_NAME || "ebdb",
-    port: process.env.RDS_PORT || 5432,
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    database: process.env.RDS_DB_NAME,
+    port: process.env.RDS_PORT,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
@@ -258,34 +248,6 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
 app.post("/storeRecipe", async (req, res) => {
   try {
-    const file = req.files.recipe_image;
-    const uploadParams = {
-      Bucket: "recipewebsiteis403",
-      Key: file.name,
-      Body: file.data,
-    };
-
-    // Promisify the s3 upload
-    const uploadToS3 = () => {
-      return new Promise((resolve, reject) => {
-        s3.upload(uploadParams, function (err, data) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(data.Location);
-        });
-      });
-    };
-
-    // Save the URL or the key in your database
-    const imageUrl = await uploadToS3();
-    console.log(`File uploaded successfully. ${imageUrl}`);
-
-    //   const imgPath = __dirname + "/public/img/" + file.name
-    //   await file.mv(imgPath,(err) => {
-    //     if (err)
-    //       return res.status(500).send(err);
-    //  });
 
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
