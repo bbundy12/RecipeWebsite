@@ -401,10 +401,7 @@ app.post("/updateRecipe", async (req, res) => {
         }
       });
 
-      console.log("Submitted IDs: ", submittedIngredientIds);
-
       // Update each ingredient
-    
       for (const ingredient of ingredients) {
         if (ingredient.ingredient_id) {
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredient.ingredient_id).update({
@@ -436,14 +433,11 @@ app.post("/updateRecipe", async (req, res) => {
       if (typeof originalIngredientIds === 'string') {
         originalIngredientIds = [originalIngredientIds]; // Ensure it's an array
       }
-
-      console.log("Original IDs: ", originalIngredientIds);
-     
+  
 
       // Delete removed ingredients
       for (const id of originalIngredientIds) {
         if (!submittedIngredientIds.includes(id)) {
-          console.log("Deleting ingredient ID: ", id);
           // Ingredient removed, perform delete
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", id).del();
           await trx("ingredients").where("ingredient_id", id).del();
