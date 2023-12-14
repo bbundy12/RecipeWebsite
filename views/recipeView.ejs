@@ -54,7 +54,7 @@
         <% ingredients.forEach(ingredient => { %>
           <li>
             <%= ingredient.name %>, <%= ingredient.quantity %>
-            <%= ingredient.quantity > 1 ? ingredient.unit + 's' : ingredient.unit %>
+            <%= ingredient.quantity > 1 ? ingredient.unit + '(s)' : ingredient.unit %>
           </li>
         <% }); %>
 
