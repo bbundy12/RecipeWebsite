@@ -54,6 +54,12 @@ header p {
   margin: 0;
 }
 
+header div,
+.landing-section div {
+  display: flex;
+  flex-direction: row;
+}
+
 header a {
   background-color: var(--primary-color);
   color: white;
@@ -61,7 +67,7 @@ header a {
   font-size: 1.2em;
   font-weight: 500;
   padding: 15px 20px;
-  margin: 20px 0 0 0;
+  margin: 20px 20px 0 0;
   text-align: center;
   text-decoration: none;
   transition: 0.35s ease-in-out;
@@ -133,7 +139,7 @@ main {
   font-size: 1.2em;
   font-weight: 500;
   padding: 15px 20px;
-  margin: 2em 0 0 0;
+  margin: 2em 10px 0 0;
   text-align: center;
   text-decoration: none;
   transition: 0.35s ease-in-out;
