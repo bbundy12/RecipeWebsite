@@ -408,6 +408,7 @@ app.post("/updateRecipe", async (req, res) => {
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredient.ingredient_id).update({
             quantity: ingredient.quantity,
             unit: ingredient.unit,
+            name: ingredient.name,
           });
         }
 
