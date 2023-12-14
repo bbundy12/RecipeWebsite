@@ -14,14 +14,6 @@ const port = process.env.PORT || 3000;
 
 const puppeteer = require("puppeteer");
 
-const fileUpload = require('express-fileupload');
-app.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
-}));
-
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3();
-
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -153,7 +145,7 @@ app.get("/recipeSubmitted/:user_id", (req, res) => {
 app.get("/userLanding/:user_id", async (req, res) => {
   try {
     const user_id = req.params.user_id;
-    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
+    const recipes = await knex("recipes").where("user_id", user_id).select("title",  "recipe_id");
     console.log(recipes);
     res.render("userLanding", { recipes, user_id});
   } catch (error) {
@@ -242,35 +234,6 @@ app.post("/aggregate_ingredients", async (req, res) => {
 app.post("/storeRecipe", async (req, res) => {
   try {
 
-    const file = req.files.recipe_image;
-    const uploadParams = {
-        Bucket: 'recipewebsiteis403',
-        Key: file.name,
-        Body: file.data
-    };
-
-    // Promisify the s3 upload
-    const uploadToS3 = () => {
-      return new Promise((resolve, reject) => {
-        s3.upload(uploadParams, function(err, data) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(data.Location);
-        });
-      });
-    };
-
-    // Save the URL or the key in your database
-    const imageUrl = await uploadToS3();
-    console.log(`File uploaded successfully. ${imageUrl}`);
-
-  //   const imgPath = __dirname + "/public/img/" + file.name
-  //   await file.mv(imgPath,(err) => {
-  //     if (err)
-  //       return res.status(500).send(err);
-  //  }); 
-
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
 
@@ -302,9 +265,7 @@ app.post("/storeRecipe", async (req, res) => {
           title: req.body.recipe_title,
           user_id: user_id,
           servings: req.body.servings,
-          recipe_instructions: recipe_instructions,
-          // image: "/img/" + file.name,
-          image: imageUrl
+          recipe_instructions: recipe_instructions
         })
         .returning("recipe_id");
 
