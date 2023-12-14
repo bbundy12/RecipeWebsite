@@ -51,13 +51,12 @@
       </p>
       <h4>Ingredients</h4>
       <ul id="ingredient-list">
-        <% ingredients.forEach(ingredient=> { %>
-
+        <% ingredients.forEach(ingredient => { %>
           <li>
             <%= ingredient.name %>, <%= ingredient.quantity %>
-                <%= ingredient.unit "(s)" %>
+            <%= ingredient.quantity > 1 ? ingredient.unit + 's' : ingredient.unit %>
           </li>
-          <% }); %>
+        <% }); %>
 
       </ul>
       <h4>Recipe Description</h4>
