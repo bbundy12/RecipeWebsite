@@ -280,9 +280,7 @@ app.post("/storeRecipe", async (req, res) => {
           title: req.body.recipe_title,
           user_id: user_id,
           servings: req.body.servings,
-          recipe_instructions: recipe_instructions,
-          // image: "/img/" + file.name,
-          image: imageUrl,
+          recipe_instructions: recipe_instructions
         })
         .returning("recipe_id");
 
