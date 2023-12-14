@@ -14,12 +14,14 @@ const port = process.env.PORT || 3000;
 
 const puppeteer = require("puppeteer");
 
-const fileUpload = require('express-fileupload');
-app.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
-}));
+const fileUpload = require("express-fileupload");
+app.use(
+  fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+  })
+);
 
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 
 app.set("view engine", "ejs");
@@ -155,7 +157,7 @@ app.get("/userLanding/:user_id", async (req, res) => {
     const user_id = req.params.user_id;
     const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
     console.log(recipes);
-    res.render("userLanding", { recipes, user_id});
+    res.render("userLanding", { recipes, user_id });
   } catch (error) {
     console.error("Error fetching recipes:", error);
     res.status(500).send("Internal Server Error");
@@ -180,79 +182,90 @@ app.get("/recipeView/:recipe_id", async (req, res) => {
   }
 });
 
+app.get("/shoppingList/:user_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const recipes = await knex("recipes").where("user_id", user_id).select("title", "image", "recipe_id");
+    console.log(recipes);
+    res.render("userLanding", { recipes, user_id });
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // // POST route to aggregate ingredients for selected recipes
 app.post("/aggregate_ingredients", async (req, res) => {
-   try {
-     // Extract selected recipe names from the request
-     const recipes = req.body.recipes;
+  try {
+    // Extract selected recipe names from the request
+    const recipes = req.body.recipes;
 
-     // Query to get ingredients
-     const ingredientsQuery = await knex
-       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
-       .from("recipes")
-       .join("recipe_ingredients", "recipes.recipe_id", '=', "recipe_ingredients.recipe_id")
-       .join("ingredients", "recipe_ingredients.ingredient_id", '=', "ingredients.ingredient_id")
-       .whereIn("recipes.title", recipes);
+    // Query to get ingredients
+    const ingredientsQuery = await knex
+      .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
+      .from("recipes")
+      .join("recipe_ingredients", "recipes.recipe_id", "=", "recipe_ingredients.recipe_id")
+      .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
+      .whereIn("recipes.title", recipes);
 
-     // Array to hold aggregated ingredients
-     let aggregatedIngredients = [];
+    // Array to hold aggregated ingredients
+    let aggregatedIngredients = [];
 
-     // Iterate through query results and aggregate quantities
-     for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
-       let bFound = false;
-       for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
-         if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
-           aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
-           bFound = true;
-         }
-       }
-       if (!bFound) {
+    // Iterate through query results and aggregate quantities
+    for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
+      let bFound = false;
+      for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
+        if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
+          aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
+          bFound = true;
+        }
+      }
+      if (!bFound) {
         aggregatedIngredients.push([ingredientsQuery[iQuery].name, ingredientsQuery[iQuery].quantity, ingredientsQuery[iQuery].unit]);
-         bFound = true;
-       }
-     }
+        bFound = true;
+      }
+    }
 
-     console.log("Aggregated Ingredients:", aggregatedIngredients);
+    console.log("Aggregated Ingredients:", aggregatedIngredients);
 
-     // Create an HTML template for the PDF
-     let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
-     htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
-     aggregatedIngredients.forEach((ingredient) => {
-       htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
-     });
-     htmlContent += `</ul></body></html>`;
+    // Create an HTML template for the PDF
+    let htmlContent = `<html><head><style>/* Your CSS styles here */</style></head><body>`;
+    htmlContent += `<h1>Aggregated Ingredients</h1><ul>`;
+    aggregatedIngredients.forEach((ingredient) => {
+      htmlContent += `<li>${ingredient[0]}: ${ingredient[1]} ${ingredient[2]}</li>`;
+    });
+    htmlContent += `</ul></body></html>`;
 
-     // Launch Puppeteer and create a PDF
-     const browser = await puppeteer.launch();
-     const page = await browser.newPage();
-     await page.setContent(htmlContent);
-     const pdf = await page.pdf({ format: "A4" });
+    // Launch Puppeteer and create a PDF
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+    const pdf = await page.pdf({ format: "A4" });
 
-     // Send the PDF as a response
-     res.contentType("application/pdf");
-     res.send(pdf);
+    // Send the PDF as a response
+    res.contentType("application/pdf");
+    res.send(pdf);
 
-     await browser.close();
-   } catch (error) {
-     console.error("Error fetching data:", error);
-     res.status(500).send("Internal Server Error");
-   }
+    await browser.close();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/storeRecipe", async (req, res) => {
   try {
-
     const file = req.files.recipe_image;
     const uploadParams = {
-        Bucket: 'recipewebsiteis403',
-        Key: file.name,
-        Body: file.data
+      Bucket: "recipewebsiteis403",
+      Key: file.name,
+      Body: file.data,
     };
 
     // Promisify the s3 upload
     const uploadToS3 = () => {
       return new Promise((resolve, reject) => {
-        s3.upload(uploadParams, function(err, data) {
+        s3.upload(uploadParams, function (err, data) {
           if (err) {
             return reject(err);
           }
@@ -265,11 +278,11 @@ app.post("/storeRecipe", async (req, res) => {
     const imageUrl = await uploadToS3();
     console.log(`File uploaded successfully. ${imageUrl}`);
 
-  //   const imgPath = __dirname + "/public/img/" + file.name
-  //   await file.mv(imgPath,(err) => {
-  //     if (err)
-  //       return res.status(500).send(err);
-  //  }); 
+    //   const imgPath = __dirname + "/public/img/" + file.name
+    //   await file.mv(imgPath,(err) => {
+    //     if (err)
+    //       return res.status(500).send(err);
+    //  });
 
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
@@ -304,7 +317,7 @@ app.post("/storeRecipe", async (req, res) => {
           servings: req.body.servings,
           recipe_instructions: recipe_instructions,
           // image: "/img/" + file.name,
-          image: imageUrl
+          image: imageUrl,
         })
         .returning("recipe_id");
 
@@ -362,15 +375,15 @@ app.get("/editRecipe/:title", async (req, res) => {
     const { recipeTitle, username } = req.query;
 
     const recipeResult = await knex("recipes").select("recipe_id").where("title", req.params.title).first();
-    
+
     console.log(recipeResult);
-    
+
     if (!recipeResult) {
       return res.status(404).send("Recipe not found");
     }
-     
-     const recipe_id = recipeResult.recipe_id;
-     console.log(recipe_id);
+
+    const recipe_id = recipeResult.recipe_id;
+    console.log(recipe_id);
 
     const recipe = await knex("recipes").where("recipe_id", recipe_id).first(); // Assuming you expect only one recipe per recipe_id
     const ingredients = await knex("ingredients")
@@ -388,24 +401,23 @@ app.get("/editRecipe/:title", async (req, res) => {
 
 app.post("/updateRecipe", async (req, res) => {
   try {
-   
     const title = req.body.recipe_title;
     const servings = req.body.servings;
     const recipe_instructions = req.body.recipe_instructions;
     const recipe_id = req.body.recipe_id;
 
-    const useridprom = await knex("recipes").where("recipe_id", recipe_id).select('user_id');
+    const useridprom = await knex("recipes").where("recipe_id", recipe_id).select("user_id");
     const user_id = useridprom[0].user_id;
 
     const ingredients = [];
-    Object.keys(req.body).forEach(key => {
+    Object.keys(req.body).forEach((key) => {
       if (key.startsWith("ingredient-name-")) {
         const index = key.split("-")[2];
         ingredients.push({
           name: req.body[`ingredient-name-${index}`],
           quantity: req.body[`quantity-${index}`],
           unit: req.body[`measurement-${index}`],
-          ingredient_id: req.body[`ingredient-id-${index}`]
+          ingredient_id: req.body[`ingredient-id-${index}`],
         });
       }
     });
@@ -421,7 +433,7 @@ app.post("/updateRecipe", async (req, res) => {
 
       // Create array with submitted ingredients
       const submittedIngredientIds = [];
-      ingredients.forEach(ingredient => {
+      ingredients.forEach((ingredient) => {
         if (ingredient.ingredient_id) {
           submittedIngredientIds.push(ingredient.ingredient_id);
         }
@@ -436,11 +448,9 @@ app.post("/updateRecipe", async (req, res) => {
           });
 
           await trx("ingredients").where("ingredient_id", ingredient.ingredient_id).update({
-            name: ingredient.name
+            name: ingredient.name,
           });
-        } 
-        else {
-
+        } else {
           // Add new ingredient
           const newIngredientResult = await trx("ingredients").insert({ name: ingredient.name }).returning("ingredient_id");
           const newIngredientId = newIngredientResult[0].ingredient_id;
@@ -451,28 +461,27 @@ app.post("/updateRecipe", async (req, res) => {
             ingredient_id: newIngredientId,
             quantity: ingredient.quantity,
             unit: ingredient.unit,
-        });
-      }
-      
-      // Get original ingredient IDs from the form
-      let originalIngredientIds = req.body['original-ingredient-ids'] || [];
-      if (typeof originalIngredientIds === 'string') {
-        originalIngredientIds = [originalIngredientIds]; // Ensure it's an array
-      }
-  
+          });
+        }
 
-      // Delete removed ingredients
-      for (const id of originalIngredientIds) {
-        if (!submittedIngredientIds.includes(id)) {
-          // Ingredient removed, perform delete
-          await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", id).del();
-          await trx("ingredients").where("ingredient_id", id).del();
+        // Get original ingredient IDs from the form
+        let originalIngredientIds = req.body["original-ingredient-ids"] || [];
+        if (typeof originalIngredientIds === "string") {
+          originalIngredientIds = [originalIngredientIds]; // Ensure it's an array
+        }
+
+        // Delete removed ingredients
+        for (const id of originalIngredientIds) {
+          if (!submittedIngredientIds.includes(id)) {
+            // Ingredient removed, perform delete
+            await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", id).del();
+            await trx("ingredients").where("ingredient_id", id).del();
+          }
         }
       }
-    }
 
-    await trx.commit();
-  });
+      await trx.commit();
+    });
 
     res.redirect("/userLanding/" + user_id); // Redirect after successful update
   } catch (error) {
@@ -485,15 +494,13 @@ app.get("/deleteRecipe/:recipe_id", async (req, res) => {
   try {
     const recipe_id = req.params.recipe_id;
 
-    const useridprom = await knex("recipes").where("recipe_id", recipe_id).select('user_id');
+    const useridprom = await knex("recipes").where("recipe_id", recipe_id).select("user_id");
     const user_id = useridprom[0].user_id;
 
     // Begin a transaction for data consistency
     await knex.transaction(async (trx) => {
       // First, select ingredient IDs associated with the recipe
-      const ingredientIds = await trx("recipe_ingredients")
-                                 .where("recipe_id", recipe_id)
-                                 .select("ingredient_id");
+      const ingredientIds = await trx("recipe_ingredients").where("recipe_id", recipe_id).select("ingredient_id");
 
       // Delete related data from recipe_ingredients junction table
       await trx("recipe_ingredients").where("recipe_id", recipe_id).del();
@@ -513,6 +520,5 @@ app.get("/deleteRecipe/:recipe_id", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 app.listen(port, () => console.log("Express App has started and server is listening!"));

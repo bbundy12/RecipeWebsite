@@ -35,25 +35,25 @@
 
     <header>
       <h2>Welcome!</h2>
-      <p>View your current recipies below and decide what you want to add to your shopping list.</p>
-      <a href="/createRecipe">Create Recipe</a>
+      <p>Generate your shopping list from the recipes listed below.</p>
     </header>
 
     <h3>Select Recipes</h3>
-    <div id="recipe-card-container">
-      <% recipes.forEach(recipe=> { %>
-        <div class="recipe-card" style="background-image: url('<%= recipes.image %>');">
-          <h4>
-            <%= recipe.title %>
-          </h4>
-          <form action="/recipeView/<%= recipe.recipe_id %>" method="get">
-            <button type="submit">View Recipe</button>
-          </form>
-        </div>
-        <% }); %>
-    </div>
-    <form action="/shoppingList/<%= recipe.recipe_id %>" type="get">
-      <button type="submit">Generate Shopping List</button>
+    <form action="/aggregate_ingredients" method="post">
+      <div id="recipe-card-container">
+        <% recipes.forEach(recipe=> { %>
+          <div class="recipe-card" style="background-image: url('<%= recipes.image %>');">
+            <h4>
+              <%= recipe.title %>
+            </h4>
+            <div class="token-container">
+              <input id="<%= recipe.title %>" value="<%= recipe.title %>" name="selected-recipes" type="checkbox" />
+              <label for="<%= recipe.title %>" class="token">Add to Shopping List</label>
+            </div>
+          </div>
+          <% }); %>
+      </div>
+      <button type="submit">Generate Grocery List</button>
     </form>
     <script>
       // Save user_id to local storage
