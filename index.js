@@ -139,7 +139,8 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/recipeSubmitted/:user_id", (req, res) => {
-  res.render("recipeSubmitted");
+  const user_id = req.params.user_id;
+  res.render("recipeSubmitted", {user_id});
 });
 
 app.get("/userLanding/:user_id", async (req, res) => {
@@ -259,7 +260,7 @@ app.post("/storeRecipe", async (req, res) => {
 
     const queryResult = await knex("users").select("user_id").where("username", req.body.username);
     const user_id = queryResult[0].user_id;
-
+    console.log('User_ID:', user_id);
     console.log("Ingredients:", ingredients);
 
     // Use Knex transactions to ensure atomicity
@@ -272,7 +273,7 @@ app.post("/storeRecipe", async (req, res) => {
           title: req.body.recipe_title,
           user_id: user_id,
           servings: req.body.servings,
-          recipe_instructions: recipe_instructions
+          recipe_instructions: recipe_instructions,
         })
         .returning("recipe_id");
 
