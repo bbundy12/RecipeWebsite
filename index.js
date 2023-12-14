@@ -208,7 +208,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
       .from("recipes")
       .join("recipe_ingredients", "recipes.recipe_id", "=", "recipe_ingredients.recipe_id")
       .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
-      .whereIn("recipes.title", recipe.title);
+      .whereIn("recipes.title", recipes.title);
 
     console.log("Ingredients: ", ingredientsQuery);
     // Array to hold aggregated ingredients
