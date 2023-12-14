@@ -367,11 +367,17 @@ app.post("/updateRecipe", async (req, res) => {
     const servings = req.body.servings;
     const description = req.body.description;
 
+    console.log(title, servings, description);
+
     const recipeResult = await knex("recipes").select("recipe_id").where("title", title).first();
     const recipe_id = recipeResult.recipe_id;
 
+    console.log(recipe_id);
+
     const useridprom = await knex("recipes").where("recipe_id", recipe_id).select('user_id');
     const user_id = useridprom[0].user_id;
+
+    console.log(user_id);
 
     const ingredients = [];
     Object.keys(req.body).forEach(key => {
@@ -384,6 +390,8 @@ app.post("/updateRecipe", async (req, res) => {
         });
       }
     });
+    
+    console.log(ingredients);
 
     // Begin a transaction
     await knex.transaction(async (trx) => {
@@ -396,7 +404,7 @@ app.post("/updateRecipe", async (req, res) => {
 
       // Update each ingredient
       for (const ingredient of ingredients) {
-        const ingredientRecord = await trx("ingredients").where("name", ingredient.name).first();
+        const ingredientRecord = await trx("ingredients").select('user_id').where("name", ingredient.name).first();
         if (ingredientRecord) {
           await trx("recipe_ingredients").where("recipe_id", recipe_id).andWhere("ingredient_id", ingredientRecord.ingredient_id).update({
             quantity: ingredient.quantity,
