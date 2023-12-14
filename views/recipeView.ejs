@@ -31,10 +31,10 @@
       <div>
         <!-- <a href="/editRecipe">Edit Recipe</a>
         <a href="/deleteRecipe">Delete Recipe</a> -->
-        <form action="/editRecipe" method="get">
+        <form action="/editRecipe/<%= recipes.title %>" method="get">
           <button type="submit">Edit Recipe</button>
         </form>
-        <form action="/deleteRecipe" method="get">
+        <form action="/deleteRecipe/<%= recipes.title %>" method="get">
           <button type="submit">Delete Recipe</button>
         </form>
       </div>
