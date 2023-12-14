@@ -200,7 +200,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
     // Extract selected recipe names from the request
     const recipes = req.body.recipe;
 
-    console.log("Recipes", recipe);
+    console.log("Recipes", recipes);
     // Query to get ingredients
     const ingredientsQuery = await knex
       .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
