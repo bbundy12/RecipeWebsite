@@ -104,10 +104,10 @@
                                       <input id="lb-<%= index %>" value="lb" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='lb' ) { %> checked <% } %> />
                                         <label for="lb-<%= index %>">lb</label>
 
-                                        <input id="half-<%= index %>" value="half" name="measurement_<%= index %>" type="radio" required <% if(ingredient.unit==='half' ) { %> checked <% } %> />
+                                        <input id="half-<%= index %>" value="half" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='half' ) { %> checked <% } %> />
                                           <label for="half-<%= index %>">half</label>
 
-                                          <input id="whole-<%= index %>" value="whole" name="measurement_<%= index %>" type="radio" required <% if(ingredient.unit==='whole' ) { %> checked <% } %> />
+                                          <input id="whole-<%= index %>" value="whole" name="measurement-<%= index %>" type="radio" required <% if(ingredient.unit==='whole' ) { %> checked <% } %> />
                                             <label for="whole-<%= index %>" style="border-radius: 0 2px 2px 0;">whole</label>
                           </div>
                           <div class="question-divider"></div>
@@ -160,9 +160,9 @@
         <label for="oz-${uniqueCounter}">oz</label>
         <input id="lb-${uniqueCounter}" value="lb" name="measurement-${uniqueCounter}" type="radio" required />
         <label for="lb-${uniqueCounter}">lb</label>
-        <input id="half-${uniqueCounter}" value="half" name="measurement_${uniqueCounter}" type="radio" required />
+        <input id="half-${uniqueCounter}" value="half" name="measurement-${uniqueCounter}" type="radio" required />
         <label for="half-${uniqueCounter}">half</label>
-        <input id="whole-${uniqueCounter}" value="whole" name="measurement_${uniqueCounter}" type="radio" required />
+        <input id="whole-${uniqueCounter}" value="whole" name="measurement-${uniqueCounter}" type="radio" required />
         <label for="whole-${uniqueCounter}" style="border-radius: 0 2px 2px 0;">whole</label>
     </div>
     <div class="question-divider"></div>
