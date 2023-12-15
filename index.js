@@ -106,19 +106,19 @@ app.get("/editUser", (req, res) => {
   res.render("editUser");
 });
 
-app.post("/updateP", (req, res) => {
+app.post("/updatePassword", async (req, res) => {
   try {
     // Retrieve data from the form submission
     const newPassword = req.body.newPassword;
     const Username = req.body.username;
 
-    const q1 = knex("users").where("username", Username).select("user_id");
-    const user_id = await q1[0].user_id;
+    const q1 = await knex("users").where("username", Username).select("user_id");
+    const user_id = q1[0].user_id;
 
     // Update the password in the database
     knex("users")
-      .where("username", req.body.username)
-      .update({ password: req.body.newPassword})
+      .where("username", Username)
+      .update({ password: newPassword})
       .then(() => {
         // Password updated successfully, redirect to a success page
         res.redirect("/updatedPassword/" + user_id);
