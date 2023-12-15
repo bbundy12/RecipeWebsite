@@ -208,12 +208,12 @@ app.post("/aggregate_ingredients", async (req, res) => {
       let bFound = false;
       for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
         if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
-          aggregatedIngredients[iNum][1] += ingredientsQuery[iQuery].quantity;
+          parseFloat(aggregatedIngredients[iNum][1]) += parseFloat(ingredientsQuery[iQuery].quantity);
           bFound = true;
         }
       }
       if (!bFound) {
-        aggregatedIngredients.push([ingredientsQuery[iQuery].name, ingredientsQuery[iQuery].quantity, ingredientsQuery[iQuery].unit]);
+        aggregatedIngredients.push([ingredientsQuery[iQuery].name, parseFloat(ingredientsQuery[iQuery].quantity), ingredientsQuery[iQuery].unit]);
         bFound = true;
       }
     }
