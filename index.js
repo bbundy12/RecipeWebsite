@@ -227,7 +227,9 @@ app.post("/aggregate_ingredients", async (req, res) => {
         }
       }
 
-      res.render("viewShoppingList", { aggregatedIngredients });
+      let user_id = req.body.user_id
+
+      res.render("viewShoppingList", { aggregatedIngredients, user_id});
     } else {
       res.render("viewShoppingList", { aggregatedIngredients: [], message: "No recipes selected." });
     }
