@@ -110,13 +110,16 @@ app.post("/updatePassword", (req, res) => {
     const confirmNewPassword = req.body.confirmNewPassword;
     const Username = req.body.username;
 
+    const q1 = knex('users').where('username',Username).select('user_id');
+    const user_id = q1[0].user_id;
+
     // Update the password in the database
     knex("users")
       .where("username", Username)
       .update({ password: newPassword })
       .then(() => {
         // Password updated successfully, redirect to a success page
-        res.redirect("/updatedPassword");
+        res.redirect("/updatedPassword/" + user_id);
       })
       .catch((error) => {
         // Handle database update error (redirect to editUser with an error)
@@ -128,8 +131,9 @@ app.post("/updatePassword", (req, res) => {
   }
 });
 
-app.get("/updatedPassword", (req, res) => {
-  res.render("updatedPassword");
+app.get("/updatedPassword/:user_id", (req, res) => {
+  let user_id = req.params.user_id;
+  res.render("updatedPassword", {user_id});
 });
 
 app.get("/login", (req, res) => {
