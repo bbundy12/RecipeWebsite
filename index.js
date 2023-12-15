@@ -109,9 +109,7 @@ app.get("/editUser", (req, res) => {
 app.post("/updatePassword", (req, res) => {
   try {
     // Retrieve data from the form submission
-    const currentPassword = req.body.currentPassword;
     const newPassword = req.body.newPassword;
-    const confirmNewPassword = req.body.confirmNewPassword;
     const Username = req.body.username;
 
     const q1 = knex("users").where("username", Username).select("user_id");
