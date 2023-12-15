@@ -199,7 +199,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
     
     // Query to get ingredients
-    if (titles.length > 0) {
+    if (title.length > 0) {
       const ingredientsQuery = await knex
         .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
         .from("recipes")
