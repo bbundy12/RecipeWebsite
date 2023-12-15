@@ -233,7 +233,8 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
       res.render("viewShoppingList", { aggregatedIngredients, user_id});
     } else {
-      res.render("viewShoppingList", { aggregatedIngredients: [], message: "No recipes selected." });
+      let user_id = req.body.user_id;
+      res.render("viewShoppingList", { user_id: user_id, aggregatedIngredients: [], message: "No recipes selected." });
     }
   } catch (error) {
     console.error("Error fetching data:", error);
