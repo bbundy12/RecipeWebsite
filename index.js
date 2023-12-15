@@ -110,7 +110,7 @@ app.post("/updatePassword", (req, res) => {
     const confirmNewPassword = req.body.confirmNewPassword;
     const Username = req.body.username;
 
-    const q1 = knex('users').where('username',Username).select('user_id');
+    const q1 = knex("users").where("username", Username).select("user_id");
     const user_id = q1[0].user_id;
 
     // Update the password in the database
@@ -133,7 +133,7 @@ app.post("/updatePassword", (req, res) => {
 
 app.get("/updatedPassword/:user_id", (req, res) => {
   let user_id = req.params.user_id;
-  res.render("updatedPassword", {user_id});
+  res.render("updatedPassword", { user_id });
 });
 
 app.get("/login", (req, res) => {
@@ -193,15 +193,14 @@ app.post("/aggregate_ingredients", async (req, res) => {
     // Extract selected recipe names from the request
     let title = req.body.recipe_title;
 
-     // If 'titles' is a string, convert it to an array
-     if (typeof title === 'string') {
+    // If 'titles' is a string, convert it to an array
+    if (typeof title === "string") {
       title = [title];
     }
 
     // If 'titles' is undefined or empty, initialize it as an empty array
     title = title || [];
 
-    
     // Query to get ingredients
     if (title.length > 0) {
       const ingredientsQuery = await knex
@@ -229,11 +228,10 @@ app.post("/aggregate_ingredients", async (req, res) => {
       }
 
       res.render("viewShoppingList", { aggregatedIngredients });
-    } 
-  else{
-    res.render("viewShoppingList", { aggregatedIngredients: [], message: "No recipes selected." });
-  }
-} catch (error) {
+    } else {
+      res.render("viewShoppingList", { aggregatedIngredients: [], message: "No recipes selected." });
+    }
+  } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Internal Server Error");
   }
