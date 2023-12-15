@@ -8,7 +8,7 @@ nav {
   width: calc(100vw - 40px);
   z-index: 1;
   display: flex;
-  justify-content: end;
+  justify-content: baseline;
   align-items: center;
   padding: 20px;
   background-color: var(--secondary-dark);
