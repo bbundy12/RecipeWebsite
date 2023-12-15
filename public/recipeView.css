@@ -37,6 +37,11 @@ nav button:hover {
   border: 2px transparent solid;
 }
 
+nav form {
+  display: inline;
+  margin: 0 20px 0 0;
+}
+
 main {
   width: 60vw;
   padding: 100px 0;
