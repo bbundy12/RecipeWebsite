@@ -106,7 +106,7 @@ app.get("/editUser", (req, res) => {
   res.render("editUser");
 });
 
-app.post("/updatePassword", (req, res) => {
+app.post("/updateP", (req, res) => {
   try {
     // Retrieve data from the form submission
     const newPassword = req.body.newPassword;
