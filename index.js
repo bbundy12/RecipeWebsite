@@ -117,8 +117,8 @@ app.post("/updatePassword", (req, res) => {
 
     // Update the password in the database
     knex("users")
-      .where("username", Username)
-      .update({ password: newPassword })
+      .where("username", req.body.username)
+      .update({ password: req.body.newPassword})
       .then(() => {
         // Password updated successfully, redirect to a success page
         res.redirect("/updatedPassword/" + user_id);
