@@ -231,7 +231,8 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
       res.render("viewShoppingList", { aggregatedIngredients, user_id});
     } else {
-      res.render("shoppingList/" , { user_id, error: "Select a recipe to view the grocery list" });;
+    
+      res.render("shoppingList/" + user_id, { error: "Select a recipe to view the grocery list" });;
     }
   } catch (error) {
     console.error("Error fetching data:", error);
