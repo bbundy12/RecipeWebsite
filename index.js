@@ -138,7 +138,7 @@ app.get("/login", (req, res) => {
 
 app.get("/recipeSubmitted/:user_id", (req, res) => {
   const user_id = req.params.user_id;
-  res.render("recipeSubmitted", {user_id});
+  res.render("recipeSubmitted", { user_id });
 });
 
 app.get("/userLanding/:user_id", async (req, res) => {
@@ -188,7 +188,6 @@ app.post("/aggregate_ingredients", async (req, res) => {
   try {
     // Extract selected recipe names from the request
     const title = req.body.recipe_title;
-    
 
     console.log("Recipes", title);
     // Query to get ingredients
@@ -208,7 +207,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
       let bFound = false;
       for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
         if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
-          parseFloat(aggregatedIngredients[iNum][1]) += parseFloat(ingredientsQuery[iQuery].quantity);
+          aggregatedIngredients[iNum][1] = parseFloat(aggregatedIngredients[iNum][1]) + parseFloat(ingredientsQuery[iQuery].quantity);
           bFound = true;
         }
       }
@@ -229,8 +228,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
 
 app.get("/viewShoppingList", async (req, res) => {
   try {
-  console.log(aggregatedIngredients);
-
+    console.log(aggregatedIngredients);
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Internal Server Error");
@@ -239,7 +237,6 @@ app.get("/viewShoppingList", async (req, res) => {
 
 app.post("/storeRecipe", async (req, res) => {
   try {
-
     const { recipe_title, servings, recipe_instructions } = req.body;
     const ingredients = [];
 
@@ -256,11 +253,11 @@ app.post("/storeRecipe", async (req, res) => {
       }
     });
 
-    console.log('Username', req.body.username);
+    console.log("Username", req.body.username);
 
     const queryResult = await knex("users").select("user_id").where("username", req.body.username);
     const user_id = queryResult[0].user_id;
-    console.log('User_ID:', user_id);
+    console.log("User_ID:", user_id);
     console.log("Ingredients:", ingredients);
 
     // Use Knex transactions to ensure atomicity
