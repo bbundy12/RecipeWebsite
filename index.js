@@ -190,12 +190,12 @@ app.post("/aggregate_ingredients", async (req, res) => {
     const title = req.body.recipe_title;
 
      // If 'titles' is a string, convert it to an array
-     if (typeof titles === 'string') {
-      titles = [titles];
+     if (typeof title === 'string') {
+      title = [title];
     }
 
     // If 'titles' is undefined or empty, initialize it as an empty array
-    titles = titles || [];
+    title = title || [];
 
     
     // Query to get ingredients
