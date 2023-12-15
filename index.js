@@ -232,7 +232,7 @@ app.post("/aggregate_ingredients", async (req, res) => {
       res.render("viewShoppingList", { aggregatedIngredients, user_id});
     } else {
       let user_id = req.body.user_id;
-      res.redirect("/shoppingList/" + user_id, { error: "Select a recipe to view the grocery list" });;
+      res.render('shoppingList', { user_id: user_id, error: "Select a recipe to view the grocery list" });
     }
   } catch (error) {
     console.error("Error fetching data:", error);
