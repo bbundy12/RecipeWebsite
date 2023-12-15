@@ -232,7 +232,8 @@ app.post("/aggregate_ingredients", async (req, res) => {
       res.render("viewShoppingList", { aggregatedIngredients, user_id});
     } else {
       let user_id = req.body.user_id;
-      res.render('shoppingList', { user_id: user_id, error: "Select a recipe to view the grocery list" });
+      let recipes = req.body.recipes;
+      res.render('shoppingList', { user_id: user_id, recipes: recipes, error: "Select a recipe to view the grocery list" });
     }
   } catch (error) {
     console.error("Error fetching data:", error);
