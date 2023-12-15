@@ -189,38 +189,47 @@ app.post("/aggregate_ingredients", async (req, res) => {
     // Extract selected recipe names from the request
     const title = req.body.recipe_title;
 
-    console.log("Recipes", title);
+     // If 'titles' is a string, convert it to an array
+     if (typeof titles === 'string') {
+      titles = [titles];
+    }
+
+    // If 'titles' is undefined or empty, initialize it as an empty array
+    titles = titles || [];
+
+    
     // Query to get ingredients
-    const ingredientsQuery = await knex
-      .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
-      .from("recipes")
-      .join("recipe_ingredients", "recipes.recipe_id", "=", "recipe_ingredients.recipe_id")
-      .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
-      .whereIn("recipes.title", title);
+    if (titles.length > 0) {
+      const ingredientsQuery = await knex
+        .select("recipes.title", "ingredients.name", "recipe_ingredients.unit", "recipe_ingredients.quantity")
+        .from("recipes")
+        .join("recipe_ingredients", "recipes.recipe_id", "=", "recipe_ingredients.recipe_id")
+        .join("ingredients", "recipe_ingredients.ingredient_id", "=", "ingredients.ingredient_id")
+        .whereIn("recipes.title", title);
+      // Array to hold aggregated ingredients
+      let aggregatedIngredients = [];
 
-    console.log("Ingredients: ", ingredientsQuery);
-    // Array to hold aggregated ingredients
-    let aggregatedIngredients = [];
-
-    // Iterate through query results and aggregate quantities
-    for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
-      let bFound = false;
-      for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
-        if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
-          aggregatedIngredients[iNum][1] = parseFloat(aggregatedIngredients[iNum][1]) + parseFloat(ingredientsQuery[iQuery].quantity);
+      // Iterate through query results and aggregate quantities
+      for (let iQuery = 0; iQuery < ingredientsQuery.length; iQuery++) {
+        let bFound = false;
+        for (let iNum = 0; iNum < aggregatedIngredients.length && !bFound; iNum++) {
+          if (aggregatedIngredients[iNum][0] === ingredientsQuery[iQuery].name && aggregatedIngredients[iNum][2] === ingredientsQuery[iQuery].unit) {
+            aggregatedIngredients[iNum][1] = parseFloat(aggregatedIngredients[iNum][1]) + parseFloat(ingredientsQuery[iQuery].quantity);
+            bFound = true;
+          }
+        }
+        if (!bFound) {
+          aggregatedIngredients.push([ingredientsQuery[iQuery].name, parseFloat(ingredientsQuery[iQuery].quantity), ingredientsQuery[iQuery].unit]);
           bFound = true;
         }
       }
-      if (!bFound) {
-        aggregatedIngredients.push([ingredientsQuery[iQuery].name, parseFloat(ingredientsQuery[iQuery].quantity), ingredientsQuery[iQuery].unit]);
-        bFound = true;
-      }
-    }
 
-    console.log("Aggregated Ingredients:", aggregatedIngredients);
-
-    res.render("viewShoppingList", { aggregatedIngredients });
-  } catch (error) {
+      res.render("viewShoppingList", { aggregatedIngredients });
+    } 
+  else{
+    res.render("viewShoppingList", { aggregatedIngredients: [], message: "No recipes selected." });
+  }
+} catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Internal Server Error");
   }
