@@ -90,7 +90,11 @@ app.post("/storeUser", async (req, res) => {
     } else {
       // If the username is not taken, insert the new user
       await knex("users").insert({ username: req.body.username, password: req.body.password });
-      res.redirect("accountCreated");
+
+      const useridpromise = knex('users').where('username', req.body.username).select('user_id').then((rows) => rows[0].user_id)
+      const newid = await useridpromise
+
+      res.redirect("accountCreated/" + newid);
     }
   } catch (err) {
     console.error("Error storing user:", err);
@@ -330,8 +334,9 @@ app.get("/logout", (req, res) => {
   res.render("logoutSuccessful");
 });
 
-app.get("/accountCreated", (req, res) => {
-  res.render("accountCreated");
+app.get("/accountCreated/:user_id", (req, res) => {
+  let user_id = req.params.user_id;
+  res.render("accountCreated", {user_id});
 });
 
 app.get("/createRecipe", (req, res) => {
