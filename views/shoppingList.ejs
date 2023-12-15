@@ -33,7 +33,7 @@
     </nav> -->
 
     <nav>
-      <a href="/userLanding/<%= recipes.user_id %>">Back to Recipes</a>
+      <a href="/userLanding/<%= user_id %>">Back to Recipes</a>
     </nav>
 
 
@@ -57,12 +57,12 @@
           </div>
           <% }); %>
       </div>
-      <input id='user_id' type="hidden" value="<%= recipes.user_id %>" name="user_id">
+      <input id='user_id' type="hidden" value="<%= user_id %>" name="user_id">
       <button type="submit">Generate Grocery List</button>
     </form>
     <script>
       // Save user_id to local storage
-      const userId = "<%= recipes.user_id %>";
+      const userId = "<%= user_id %>";
       localStorage.setItem("user_id", userId);
     </script>
     <!-- Footer -->
