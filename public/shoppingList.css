@@ -99,12 +99,12 @@ form {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  width: 80%;
+  width: 90%;
 }
 
 .recipe-card {
   padding: 20px;
-  width: 400px;
+  /* width: 350px; */
   margin: 20px;
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -114,10 +114,10 @@ form {
 
 .recipe-card h4 {
   font-size: 1.5em;
-  margin: 0 0 200px 0;
+  margin: 0;
 }
 
-.recipe-card a {
+.recipe-card form button {
   background-color: var(--primary-color);
   color: white;
   border: 2px transparent solid;
@@ -131,7 +131,7 @@ form {
   border-radius: 5px;
 }
 
-.recipe-card a:hover {
+.recipe-card form button:hover {
   color: var(--primary-color);
   background-color: white;
   border: 2px solid var(--primary-color);
