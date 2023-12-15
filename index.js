@@ -113,7 +113,7 @@ app.post("/updateP", (req, res) => {
     const Username = req.body.username;
 
     const q1 = knex("users").where("username", Username).select("user_id");
-    const user_id = q1[0].user_id;
+    const user_id = await q1[0].user_id;
 
     // Update the password in the database
     knex("users")
